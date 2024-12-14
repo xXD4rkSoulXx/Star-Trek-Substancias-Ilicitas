@@ -18,6 +18,9 @@ public class JogoProgramacao {
         this.nave = new Nave(playerName);
         this.gameOver = false;
     }
+    public Missao getMissaoAtual() {
+        return this.missao_atual;
+    }
 
     public String getUltimaMensagem() {
         if(nave.getSubstancias()==4) {
