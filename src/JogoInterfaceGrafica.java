@@ -53,6 +53,11 @@ public class JogoInterfaceGrafica {
         exploreButton = new JButton("Explorar Local");
         exploreButton.setVisible(false); // Inicialmente escondido
         exploreButton.addActionListener(e -> {
+            if (jogo.getContagem_missao() == jogo.getMissoes().size()) {
+                jogo.getNave().AdicionarSubstancias();
+                updateMissionStatus("Acabou o jogo!");
+                return;
+            }
             if (!gameOver && !inMission) {
                 jogo.Explorar();
                 updateText(jogo.getUltimaMensagem());
@@ -69,6 +74,9 @@ public class JogoInterfaceGrafica {
         restButton = new JButton("Descansar");
         restButton.setVisible(false); // Inicialmente escondido
         restButton.addActionListener(e -> {
+            if (jogo.getContagem_missao() == jogo.getMissoes().size()) {
+                return;
+            }
             if (!gameOver && !inMission) {
                 jogo.Descansar();
                 updateText(jogo.getUltimaMensagem());
@@ -246,7 +254,7 @@ public class JogoInterfaceGrafica {
     }
 
     private void showStatus() {
-        if (!inMission && !gameOver) { // Só mostra status se o jogo não acabou
+        if (inMission && !gameOver) { // Só mostra status se o jogo não acabou
             jogo.MostrarStatus();
             updateMissionStatus(jogo.getUltimaMensagem());
         }

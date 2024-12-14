@@ -38,6 +38,14 @@ public class JogoProgramacao {
         return this.nave;
     }
 
+    public int getContagem_missao() {
+        return this.contagem_missao;
+    }
+
+    public List<Missao> getMissoes() {
+        return this.missoes;
+    }
+
     public boolean isGameOver() {
         return this.gameOver;
     }
@@ -69,7 +77,11 @@ public class JogoProgramacao {
 
     public void Explorar() {
         if (!gameOver) {
-            if (contagem_missao < missoes.size()) {
+            if (contagem_missao == missoes.size()) {
+                this.ultima_mensagem = "Você completou todas as missões!";
+                this.setMissaoAtual(null);
+                //JOptionPane.showMessageDialog(null, "Parabéns! Você completou todas as missões!", "Jogo Finalizado", JOptionPane.INFORMATION_MESSAGE);
+            } else {
                 this.missao_atual = this.missoes.get(contagem_missao);
                 this.ultima_mensagem = this.missao_atual.getMensagemIntroducao();
 
@@ -77,9 +89,6 @@ public class JogoProgramacao {
                 // Não mostra nada sobre a missão aqui.
 
                 this.contagem_missao++;
-            } else {
-                this.ultima_mensagem = "Você completou todas as missões!";
-                JOptionPane.showMessageDialog(null, "Parabéns! Você completou todas as missões!", "Jogo Finalizado", JOptionPane.INFORMATION_MESSAGE);
             }
         } else {
             this.ultima_mensagem = "Jogo já acabou. Você perdeu.";
@@ -97,8 +106,14 @@ public class JogoProgramacao {
 
     public void Descansar() {
         if (!gameOver) {
-            this.ultima_mensagem = this.nave.Descansar();
-            JOptionPane.showMessageDialog(null, "Descansando... " + this.ultima_mensagem, "Descanso", JOptionPane.INFORMATION_MESSAGE);
+            if (contagem_missao == missoes.size()-1) {
+                this.ultima_mensagem = "Você completou todas as missões!";
+                this.setMissaoAtual(null);
+                //JOptionPane.showMessageDialog(null, "Parabéns! Você completou todas as missões!", "Jogo Finalizado", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                this.ultima_mensagem = this.nave.Descansar();
+                JOptionPane.showMessageDialog(null, "Descansando... " + this.ultima_mensagem, "Descanso", JOptionPane.INFORMATION_MESSAGE);
+            }
         }
     }
 
