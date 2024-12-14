@@ -27,3 +27,6 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### Nigéria ###
+src/Players/jogadores.txt

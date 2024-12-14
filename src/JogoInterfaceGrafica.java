@@ -249,8 +249,16 @@ public class JogoInterfaceGrafica {
         if (!inMission && !gameOver) { // Só mostra status se o jogo não acabou
             jogo.MostrarStatus();
             updateMissionStatus(jogo.getUltimaMensagem());
+
+            // Adicionando a impressão da missão atual na linha de comandos
+            Missao missaoAtual = jogo.getMissaoAtual();  // Obtém a missão atual
+            if (missaoAtual != null) {
+                // Imprime o que for acessível da missão, como título ou descrição
+                System.out.println("Missão Atual: " + missaoAtual);  // Usando o método toString() da Missao, se disponível
+            }
         }
     }
+
 
     private void executeAdditionalAction() {
         System.out.println("Ação adicional executada!");
