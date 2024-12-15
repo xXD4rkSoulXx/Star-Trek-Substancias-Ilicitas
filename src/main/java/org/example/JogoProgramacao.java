@@ -82,7 +82,7 @@ public class JogoProgramacao {
 
     public void Explorar() {
         if (!gameOver) {
-            if (contagem_missao == missoes.size()) {
+            if (nave.getSubstancias() == 4) {
                 this.ultima_mensagem = "Você completou todas as missões!";
                 this.setMissaoAtual(null);
                 //JOptionPane.showMessageDialog(null, "Parabéns! Você completou todas as missões!", "Jogo Finalizado", JOptionPane.INFORMATION_MESSAGE);
