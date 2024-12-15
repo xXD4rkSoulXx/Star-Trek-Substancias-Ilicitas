@@ -28,5 +28,6 @@ bin/
 ### Mac OS ###
 .DS_Store
 
-### Nigéria ###
+### Evita João ###
 src/Players/jogadores.txt
+target/classes/Players/jogadores.txt
