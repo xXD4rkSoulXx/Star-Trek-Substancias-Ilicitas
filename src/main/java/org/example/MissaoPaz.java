@@ -1,3 +1,5 @@
+package org.example;
+
 //Roteiro do Planeta Solana, Missão do Rei Paz
 public class MissaoPaz extends Missao {
     @Override

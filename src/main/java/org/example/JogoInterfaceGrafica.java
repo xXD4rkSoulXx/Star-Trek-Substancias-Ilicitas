@@ -1,6 +1,9 @@
+package org.example;
+
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
+import java.net.URL;
 
 public class JogoInterfaceGrafica {
     private JFrame frame;
@@ -31,9 +34,20 @@ public class JogoInterfaceGrafica {
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setVisible(true);
 
-        // Carregamento da imagem de fundo
-        ImageIcon backgroundIcon = new ImageIcon(getClass().getResource("Images/image.png"));
-        Image backgroundImage = backgroundIcon.getImage().getScaledInstance(frame.getWidth(), frame.getHeight(), Image.SCALE_SMOOTH);
+        ImageIcon backgroundIcon;
+		Image backgroundImage;
+		try {
+			// Obtém o recurso diretamente do diretório de recursos
+			URL resource = getClass().getResource("/Images/image.png");
+			if (resource == null) {
+				throw new IllegalArgumentException("Imagem não encontrada: /Images/image.png");
+			}
+			backgroundIcon = new ImageIcon(resource);
+			backgroundImage = backgroundIcon.getImage().getScaledInstance(frame.getWidth(), frame.getHeight(), Image.SCALE_SMOOTH);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Falha ao carregar a imagem.");
+		}
 
         // Painel principal com fundo customizado
         JPanel mainPanel = new JPanel() {

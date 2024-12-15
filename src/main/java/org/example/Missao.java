@@ -1,3 +1,5 @@
+package org.example;
+
 // Classe Abstrada de Missão, essa classe vai servir depois para fazer a missão de cada planeta, uso de polimorfismo
 public abstract class Missao {
     public abstract String getMensagemIntroducao(); //Essa vai ser o metodo sobre a mensagem introdutória de cada planeta

@@ -1,3 +1,6 @@
+package org.example;
+
+import java.net.URL;
 import java.util.List;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -25,9 +28,20 @@ public class JogoTelaInicial {
         int screenWidth = (int) screenSize.getWidth();
         int screenHeight = (int) screenSize.getHeight();
 
-        // Carregando a imagem e redimensionando para a tela
-        ImageIcon backgroundIcon = new ImageIcon(getClass().getResource("Images/image.png"));
-        Image backgroundImage = backgroundIcon.getImage().getScaledInstance(screenWidth, screenHeight, Image.SCALE_SMOOTH);
+        ImageIcon backgroundIcon;
+		Image backgroundImage;
+		try {
+			// Obtém o recurso diretamente do diretório de recursos
+			URL resource = getClass().getResource("/Images/image.png");
+			if (resource == null) {
+				throw new IllegalArgumentException("Imagem não encontrada: /Images/image.png");
+			}
+			backgroundIcon = new ImageIcon(resource);
+			backgroundImage = backgroundIcon.getImage().getScaledInstance(screenWidth, screenHeight, Image.SCALE_SMOOTH);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("Falha ao carregar a imagem.");
+		}
 
         JPanel mainPanel = new JPanel() {
             @Override

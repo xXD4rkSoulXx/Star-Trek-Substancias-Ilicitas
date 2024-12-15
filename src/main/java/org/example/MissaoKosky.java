@@ -1,3 +1,5 @@
+package org.example;
+
 //Roteiro do Planeta Ansiedade, Missão do Rei Kosky
 public class MissaoKosky extends Missao {
     @Override
