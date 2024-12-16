@@ -7,200 +7,302 @@ import java.net.URL;
 
 public class JogoInterfaceGrafica {
     private JFrame frame;
-    private JTextPane missionStatusArea;
-    private JPanel buttonPanel, missionButtonPanel;
-    private JButton exploreButton, restButton;
+    private JTextPane area_status, area_texto;
+    private JPanel area_botoes, area_botoesmissao, painel_superior, painel_fundo;
+    private JButton botao_explorar, botao_descansar, botao_avancar;
     private JogoProgramacao jogo;
-    private boolean inMission = false;
-    private boolean gameOver = false; // Controle de Game Over
-    private JButton avancarButton; // Botão de avançar
-    private boolean introducaoExibida = false; // Controle da introdução
-    private SwingWorker<Void, String> textUpdater; // Para controlar a exibição do texto
-
-    JPanel topPanel = new JPanel();
-    JPanel textBackgroundPanel = new JPanel();
-    JTextPane textArea = new JTextPane();
-    String nome;
+    private boolean dentro_missao = false;
+    private boolean game_over = false;
+    private SwingWorker<Void, String> atualiza_texto;
+    private String nome_jogador;
 
     public JogoInterfaceGrafica(String nome) {
-        this.nome = nome;
-        jogo = new JogoProgramacao(this.nome);
-        setupGUI();
+        this.nome_jogador = nome;
+        jogo = new JogoProgramacao(this.nome_jogador);
+        area_status = new JTextPane();
+        area_texto = new JTextPane();
+        area_botoes = new JPanel();
+        area_botoesmissao = new JPanel();
+        painel_superior = new JPanel();
+        painel_fundo = new JPanel();
+        ComecarJogo();
     }
 
-    private void setupGUI() {
+    private void ComecarJogo() {
+        // Título do Frame em cima da página
         frame = new JFrame("Star Trek: A rota das substâncias proibidas");
+        // Faz com que feche o frame quando clicar no x de fechar
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        // Faz com que quando abra o frame, estique automaticamente a tela do ecrã
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        // Faz o frame ficar visível
         frame.setVisible(true);
 
-        ImageIcon backgroundIcon;
-		Image backgroundImage;
-		try {
-			// Obtém o recurso diretamente do diretório de recursos
-			URL resource = getClass().getResource("/Images/image.png");
-			if (resource == null) {
-				throw new IllegalArgumentException("Imagem não encontrada: /Images/image.png");
-			}
-			backgroundIcon = new ImageIcon(resource);
-			backgroundImage = backgroundIcon.getImage().getScaledInstance(frame.getWidth(), frame.getHeight(), Image.SCALE_SMOOTH);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException("Falha ao carregar a imagem.");
-		}
+        // Bloco de código responsável por definir qual é o background
+        // ---------------------------------------
+        ImageIcon icone_fundo;
+        Image imagem_fundo;
+        try {
+            URL caminho_imagem = getClass().getResource("/Images/image.png");
+            if (caminho_imagem == null) {
+                throw new IllegalArgumentException("Imagem não encontrada: /Images/image.png");
+            }
+            icone_fundo = new ImageIcon(caminho_imagem);
+            imagem_fundo = icone_fundo.getImage().getScaledInstance(frame.getWidth(), frame.getHeight(), Image.SCALE_SMOOTH);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Falha ao carregar a imagem.");
+        }
+        // ---------------------------------------
 
-        // Painel principal com fundo customizado
-        JPanel mainPanel = new JPanel() {
+        // Bloco de código responsável por fazer a imagem de fundo configurada aparecer
+        // ---------------------------------------
+        JPanel painel_principal = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+                g.drawImage(imagem_fundo, 0, 0, getWidth(), getHeight(), this);
             }
         };
-        mainPanel.setLayout(new BorderLayout());
+        painel_principal.setLayout(new BorderLayout());
+        // ---------------------------------------
 
         // Configuração do painel superior
-        topPanel.setLayout(new BorderLayout());
-        topPanel.setBackground(Color.BLACK);
+        // --------
+        painel_superior.setLayout(new BorderLayout());
+        painel_superior.setBackground(Color.BLACK);
+        // --------
 
-        // Botão "Explorar Local"
-        exploreButton = new JButton("Explorar Local");
-        exploreButton.setVisible(false); // Inicialmente escondido
-        exploreButton.addActionListener(e -> {
+        // Botão Explorar
+        // ---------------------------------------
+        botao_explorar = new JButton("Explorar Local");
+        botao_explorar.setVisible(false);
+        botao_explorar.addActionListener(e -> {
+            // Verifica se o jogador já ganhou
+            // --------
             if (jogo.getNave().getSubstancias() == 4){
-                updateMissionStatus("Acabou o jogo!");
+                area_status.setText("Acabou o jogo!");
                 return;
             }
-            if (!gameOver && !inMission) {
+            // --------
+
+            // Verifica se o jogador já perdeu
+            // --------
+            if (!game_over && !dentro_missao) {
                 jogo.Explorar();
-                updateText(jogo.getUltimaMensagem());
+                AtualizarTexto(jogo.getUltimaMensagem());
                 if (jogo.DentroMissao()) {
-                    inMission = true;
-                    setMissionButtons(jogo.getListaOpcoes());
+                    dentro_missao = true;
+                    MeterBotoesMissao(jogo.getListaOpcoes());
                 }
             }
-            showStatus();
-            executeAdditionalAction();
-        });
+            // --------
 
-        // Botão "Descansar"
-        restButton = new JButton("Descansar");
-        restButton.setVisible(false); // Inicialmente escondido
-        restButton.addActionListener(e -> {
-            if (jogo.getNave().getSubstancias() == 4) {
+            // Verifica se o jogador já perdeu
+            // --------
+            if (dentro_missao && !game_over) {
+                jogo.MostrarStatus();
+                area_status.setText(jogo.getUltimaMensagem());
+            }
+            // --------
+        });
+        // ---------------------------------------
+
+        // Botão Descansar
+        // ---------------------------------------
+        botao_descansar = new JButton("Descansar");
+        botao_descansar.setVisible(false);
+        botao_descansar.addActionListener(e -> {
+            // Verifica se o jogador já ganhou
+            // --------
+            if (jogo.getNave().getSubstancias() == 4){
                 return;
             }
-            if (!gameOver && !inMission) {
-                jogo.Descansar();
-                updateText(jogo.getUltimaMensagem());
-            }
-            showStatus();
-            executeAdditionalAction();
-        });
+            // --------
 
-        // Botão "Avançar"
-        avancarButton = new JButton("Avançar");
-        avancarButton.setVisible(true); // Visível desde o início
-        avancarButton.addActionListener(e -> {
-            avancarButton.setVisible(false); // Esconde o botão "Avançar"
-            exploreButton.setVisible(true); // Mostra o botão "Explorar Local"
-            restButton.setVisible(true); // Mostra o botão "Descansar"
-            if (textUpdater != null && !textUpdater.isDone()) {
-                textUpdater.cancel(true); // Cancela o texto gradual
+            // Verifica se o jogador já perdeu
+            // --------
+            if (!game_over && !dentro_missao) {
+                jogo.Descansar();
+                AtualizarTexto(jogo.getUltimaMensagem());
             }
-            updateTextWithDot(); // Atualiza o texto com ponto
+            // --------
+
+            // Verifica se o jogador já perdeu
+            // --------
+            if (dentro_missao && !game_over) {
+                jogo.MostrarStatus();
+                area_status.setText(jogo.getUltimaMensagem());
+            }
+            // --------
         });
+        // ---------------------------------------
+
+        // Botão Avançar
+        // ---------------------------------------
+        botao_avancar = new JButton("Avançar");
+        botao_avancar.setVisible(true);
+        botao_avancar.addActionListener(e -> {
+            // Mete o botão Avançar invisível e faz aparecer os outros botões
+            // --------
+            botao_avancar.setVisible(false);
+            botao_explorar.setVisible(true);
+            botao_descansar.setVisible(true);
+            // --------
+
+            // Quando clico no botão avançar, ele faz o texto parar de aparecer para skipar
+            // --------
+            if (atualiza_texto != null && !atualiza_texto.isDone()) {
+                atualiza_texto.cancel(true);
+            }
+            // --------
+
+            // Remove o texto que está lá ao skipar
+            // -------------------------------------
+            StyledDocument doc = area_texto.getStyledDocument();
+            SimpleAttributeSet ponto_preto = new SimpleAttributeSet();
+            StyleConstants.setForeground(ponto_preto, Color.white);
+
+            SimpleAttributeSet estilo_default = new SimpleAttributeSet();
+            StyleConstants.setForeground(estilo_default, Color.white);
+            painel_fundo.revalidate();
+            painel_fundo.repaint();
+
+            try {
+                doc.remove(0, doc.getLength());
+                AjustarTamanhoTexto(".");
+                doc.setCharacterAttributes(0, doc.getLength(), estilo_default, false);
+                area_texto.setCaretPosition(doc.getLength());
+            } catch (BadLocationException bl) {
+                bl.printStackTrace();
+            }
+            // -------------------------------------
+        });
+        // ---------------------------------------
 
         // Painel dos botões
-        buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        buttonPanel.setOpaque(false);
-        buttonPanel.add(avancarButton); // Adiciona o botão "Avançar"
-        buttonPanel.add(exploreButton); // Adiciona o botão "Explorar Local"
-        buttonPanel.add(restButton); // Adiciona o botão "Descansar"
-        topPanel.add(buttonPanel, BorderLayout.EAST);
+        // ---------------------------------------
+        area_botoes = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        area_botoes.setOpaque(false);
+        area_botoes.add(botao_avancar);
+        area_botoes.add(botao_explorar);
+        area_botoes.add(botao_descansar);
+        painel_superior.add(area_botoes, BorderLayout.EAST);
+        // ---------------------------------------
 
         // Área de status da missão
-        missionStatusArea = new JTextPane();
-        missionStatusArea.setOpaque(true);
-        missionStatusArea.setBackground(Color.BLACK);
-        missionStatusArea.setEditable(false);
-        missionStatusArea.setFont(new Font("Arial", Font.BOLD, 16));
-        missionStatusArea.setForeground(Color.WHITE);
-        topPanel.add(missionStatusArea, BorderLayout.CENTER);
+        // ---------------------------------------
+        area_status = new JTextPane();
+        area_status.setOpaque(true);
+        area_status.setBackground(Color.BLACK);
+        area_status.setEditable(false);
+        area_status.setFont(new Font("Arial", Font.BOLD, 16));
+        area_status.setForeground(Color.WHITE);
+        painel_superior.add(area_status, BorderLayout.CENTER);
+        // ---------------------------------------
 
-        // Painel flutuante para o texto
-        JPanel floatingPanel = new JPanel();
-        floatingPanel.setOpaque(false);
-        floatingPanel.setLayout(new BoxLayout(floatingPanel, BoxLayout.Y_AXIS));
-        floatingPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 20));
+        // Painel flutuante do texto
+        // ---------------------------------------
+        JPanel painel_flutuante = new JPanel();
+        painel_flutuante.setOpaque(false);
+        painel_flutuante.setLayout(new BoxLayout(painel_flutuante, BoxLayout.Y_AXIS));
+        painel_flutuante.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 20));
+        // ---------------------------------------
 
         // Painel de fundo do texto
-        textBackgroundPanel.setBackground(Color.BLACK);
-        textBackgroundPanel.setPreferredSize(new Dimension(600, 100));
-        textBackgroundPanel.setLayout(new BorderLayout());
+        // ---------------------------------------
+        painel_fundo.setBackground(Color.BLACK);
+        painel_fundo.setPreferredSize(new Dimension(600, 100));
+        painel_fundo.setLayout(new BorderLayout());
+        // ---------------------------------------
 
-        // Configuração do JTextArea
-        textArea.setOpaque(true);
-        textArea.setEditable(false);
-        textArea.setFont(new Font("Arial", Font.BOLD, 16));
-        textArea.setForeground(Color.WHITE);
-        textArea.setBackground(Color.BLACK);
+        // Configuração da área do texto
+        // ---------------------------------------
+        area_texto.setOpaque(true);
+        area_texto.setEditable(false);
+        area_texto.setFont(new Font("Arial", Font.BOLD, 16));
+        area_texto.setForeground(Color.WHITE);
+        area_texto.setBackground(Color.BLACK);
 
-        StyledDocument doc = textArea.getStyledDocument();
+        StyledDocument doc = area_texto.getStyledDocument();
         SimpleAttributeSet center = new SimpleAttributeSet();
         StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
         doc.setParagraphAttributes(0, doc.getLength(), center, false);
 
-        textBackgroundPanel.add(textArea, BorderLayout.CENTER);
+        painel_fundo.add(area_texto, BorderLayout.CENTER);
+        // ---------------------------------------
 
-        floatingPanel.add(Box.createVerticalGlue());
-        floatingPanel.add(textBackgroundPanel);
-        floatingPanel.add(Box.createVerticalGlue());
+        //Faz com que o painel fundo apareça no centro do ecrã
+        // ---------------------------------------
+        //Faz um espaço grande em cima
+        painel_flutuante.add(Box.createVerticalGlue());
+        painel_flutuante.add(painel_fundo);
+        //Faz um espaço grande em baixo
+        painel_flutuante.add(Box.createVerticalGlue());
+        // ---------------------------------------
 
         // Adiciona os painéis ao painel principal
-        mainPanel.add(floatingPanel, BorderLayout.SOUTH);
-        mainPanel.add(topPanel, BorderLayout.NORTH);
+        // --------------
+        painel_principal.add(painel_superior, BorderLayout.NORTH);
+        painel_principal.add(painel_flutuante, BorderLayout.SOUTH);
+        // --------------
 
-        // Painel de botões de missão
-        missionButtonPanel = new JPanel();
-        missionButtonPanel.setLayout(new GridBagLayout());
-        missionButtonPanel.setOpaque(false);
-        mainPanel.add(missionButtonPanel, BorderLayout.CENTER);
-
-        frame.add(mainPanel);
+        // Configuração dos botões de missão
+        // --------------
+        area_botoesmissao = new JPanel();
+        area_botoesmissao.setLayout(new GridBagLayout());
+        area_botoesmissao.setOpaque(false);
+        painel_principal.add(area_botoesmissao, BorderLayout.CENTER);
+        frame.add(painel_principal);
+        // --------------
 
         // Atualização do texto de introdução
-        updateText("Veggs, conhecido por suas loucuras, é um ex utilizador de drogas, porém reformado. Conhecido por já usar todos os tipos de drogas: Cannabis, Cocaína, Crack, Extasy, entre outras; ele cansou de usar as mesmas drogas repetitivamente, então ele pretende inovar e fazer uma livestream ingerido todas as drogas desconhecidas provenientes de outros planetas da mesma Galáxia, então a nossa missão é coletar novos tipos de drogas ao longo de vários planetas, em que a decisão certa trará uma nova droga, mas apenas uma decisão, então as outras duas decisões poderão não conter a droga, que por mais que progrida na história, o Veggs poderá ter um ataque de fúria por não estar todas as drogas coletadas, então pense bem antes de cada decisão. Veggs é viciado em Trance Psicodélico e sempre fala que horas são de hora em hora e ao mesmo tempo agradece aos membros do planeta por pertencerem ao tal. Veggs cobra muito impostos, mais que o António Costa. Veggs localiza-se no planeta Pó, onde o chão é constituído todo puramente de cocaína. Veggs nasceu com um nariz grande e apurado, sendo que na infância era comparado ao Phineas do Phineas e Ferb ou comparado a um Tucano. Através duma Análise SWOT, ele transformou essa fraqueza de nariz grande em uma força, já que usou o nariz a seu favor para cheirar tudo o que houvesse ao redor e criar a fama que tem.");
+        AtualizarTexto("""
+                Veggs, conhecido por suas loucuras, é um ex utilizador de drogas, porém reformado. \
+                Conhecido por já usar todos os tipos de drogas: Cannabis, Cocaína, Crack, Extasy, entre outras; \
+                ele cansou de usar as mesmas drogas repetitivamente, então ele pretende inovar e fazer uma livestream \
+                ingerido todas as drogas desconhecidas provenientes de outros planetas da mesma Galáxia, então a nossa \
+                missão é coletar novos tipos de drogas ao longo de vários planetas, em que a decisão certa trará uma \
+                nova droga, mas apenas uma decisão, então as outras duas decisões poderão não conter a droga, que por \
+                mais que progrida na história, o Veggs poderá ter um ataque de fúria por não estar todas as drogas \
+                coletadas, então pense bem antes de cada decisão. Veggs é viciado em Trance Psicodélico e sempre fala \
+                que horas são de hora em hora e ao mesmo tempo agradece aos membros do planeta por pertencerem ao tal. \
+                Veggs cobra muito impostos, mais que o António Costa. Veggs localiza-se no planeta Pó, onde o chão é \
+                constituído todo puramente de cocaína. Veggs nasceu com um nariz grande e apurado, sendo que na infância \
+                era comparado ao Phineas do Phineas e Ferb ou comparado a um Tucano. Através duma Análise SWOT, ele \
+                transformou essa fraqueza de nariz grande em uma força, já que usou o nariz a seu favor para cheirar \
+                tudo o que houvesse ao redor e criar a fama que tem.""");
 
-        showStatus();
+        if (dentro_missao && !game_over) {
+            jogo.MostrarStatus();
+            area_status.setText(jogo.getUltimaMensagem());
+        }
     }
 
+    private void AjustarTamanhoTexto(String message) {
+        FontMetrics metrics = area_texto.getFontMetrics(area_texto.getFont());
+        int linha_vertical = metrics.getHeight();
+        int linha_horizontal = area_texto.getWidth();
+        int linhas = (int) Math.ceil(metrics.stringWidth(message) / (double) linha_horizontal);
+        int altura_necessaria = linhas * linha_vertical + 20;
 
-    private void adjustTextSize(String message) {
-        FontMetrics metrics = textArea.getFontMetrics(textArea.getFont());
-        int lineHeight = metrics.getHeight();
-        int textWidth = textArea.getWidth();
-
-        int lines = (int) Math.ceil(metrics.stringWidth(message) / (double) textWidth);
-        int requiredHeight = lines * lineHeight + 20; // Ajustar margem
-
-        textBackgroundPanel.setPreferredSize(new Dimension(textWidth, requiredHeight));
-        textBackgroundPanel.revalidate();
+        painel_fundo.setPreferredSize(new Dimension(linha_horizontal, altura_necessaria));
+        painel_fundo.revalidate();
     }
 
-    private void updateText(String message) {
-        if (textUpdater != null && !textUpdater.isDone()) {
-            textUpdater.cancel(true); // Cancela o SwingWorker atual
+    private void AtualizarTexto(String message) {
+        if (atualiza_texto != null && !atualiza_texto.isDone()) {
+            atualiza_texto.cancel(true);
         }
 
-        textArea.setText("");
-        adjustTextSize(message); // Ajusta o tamanho dinamicamente
+        area_texto.setText("");
+        AjustarTamanhoTexto(message);
 
-        textUpdater = new SwingWorker<>() {
+        atualiza_texto = new SwingWorker<>() {
             @Override
             protected Void doInBackground() throws InterruptedException {
                 for (int i = 0; i < message.length(); i++) {
-                    if (isCancelled()) break; // Interrompe se for cancelado
+                    if (isCancelled()) break;
                     publish(message.substring(0, i + 1));
                     Thread.sleep(30);
                 }
@@ -210,102 +312,52 @@ public class JogoInterfaceGrafica {
             @Override
             protected void process(java.util.List<String> chunks) {
                 if (!isCancelled()) {
-                    textArea.setText(chunks.get(chunks.size() - 1));
-                    adjustTextSize(chunks.get(chunks.size() - 1)); // Atualiza o tamanho ao adicionar texto
+                    area_texto.setText(chunks.get(chunks.size() - 1));
+                    AjustarTamanhoTexto(chunks.get(chunks.size() - 1));
                 }
             }
 
             @Override
             protected void done() {
                 if (!isCancelled() && message.contains("GAME OVER")) {
-                    gameOver = true;
-                    disableGameInteraction();
+                    game_over = true;
+
+                    botao_explorar.setEnabled(false);
+                    botao_descansar.setEnabled(false);
+
+                    for (Component comp : area_botoesmissao.getComponents()) {
+                        if (comp instanceof JButton) {
+                            comp.setEnabled(false);
+                        }
+                    }
+
+                    JOptionPane.showMessageDialog(frame, "GAME OVER! Obrigado por jogar!", "Fim do Jogo", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         };
 
-        textUpdater.execute();
+        atualiza_texto.execute();
     }
 
-    private void updateTextWithDot() {
-        StyledDocument doc = textArea.getStyledDocument();
-        SimpleAttributeSet blackDot = new SimpleAttributeSet();
-        StyleConstants.setForeground(blackDot, Color.white);
+    private void MeterBotoesMissao(String[] options) {
+        game_over = jogo.getNave().AcabouRecurso();
 
-        SimpleAttributeSet defaultStyle = new SimpleAttributeSet();
-        StyleConstants.setForeground(defaultStyle, Color.white); // Define o estilo padrão
-        textBackgroundPanel.revalidate();
-        textBackgroundPanel.repaint();
-
-        try {
-            doc.remove(0, doc.getLength()); // Remove o texto existente
-            adjustTextSize(".");
-            doc.setCharacterAttributes(0, doc.getLength(), defaultStyle, false); // Restaura o estilo padrão
-            textArea.setCaretPosition(doc.getLength()); // Move o cursor para o final do texto
-        } catch (BadLocationException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public void disableGameInteraction() {
-        exploreButton.setEnabled(false);
-        restButton.setEnabled(false);
-
-        for (Component comp : missionButtonPanel.getComponents()) {
-            if (comp instanceof JButton) {
-                comp.setEnabled(false);
-            }
-        }
-
-
-        JOptionPane.showMessageDialog(frame, "GAME OVER! Obrigado por jogar!", "Fim do Jogo", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    private void updateMissionStatus(String statusMessage) {
-        missionStatusArea.setText(statusMessage);
-    }
-
-    private void showStatus() {
-        if (inMission && !gameOver) { // Só mostra status se o jogo não acabou
-            jogo.MostrarStatus();
-            updateMissionStatus(jogo.getUltimaMensagem());
-
-            // Adicionando a impressão da missão atual na linha de comandos
-            Missao missaoAtual = jogo.getMissaoAtual();  // Obtém a missão atual
-            if (missaoAtual != null) {
-                // Imprime o que for acessível da missão, como título ou descrição
-                System.out.println("Missão Atual: " + missaoAtual);  // Usando o método toString() da Missao, se disponível
-            }
-        }
-    }
-
-
-    private void executeAdditionalAction() {
-        System.out.println("Ação adicional executada!");
-    }
-
-    private void setMissionButtons(String[] options) {
-        gameOver = jogo.getNave().algumRecursoZerado();
-
-        if (gameOver) {
+        if (game_over) {
             frame.dispose();
             JOptionPane.showMessageDialog(frame, "GAME OVER! Obrigado por jogar!", "Fim do Jogo", JOptionPane.INFORMATION_MESSAGE);
             System.exit(0);
             return;
         }
 
-        missionButtonPanel.removeAll();
-        missionButtonPanel.setLayout(new BorderLayout());
+        area_botoesmissao.removeAll();
+        area_botoesmissao.setLayout(new BorderLayout());
 
-        // Usa o botão já existente
-        JButton avancarButton = new JButton("Avançar"); // Atualiza o texto, se necessário
-        //avancarButton.setText("Avançar"); // Atualiza o texto, se necessário
-        avancarButton.setVisible(true); // Certifica-se de que ele está visível
-        avancarButton.addActionListener(e -> {
-            textArea.setText(""); // Limpa o texto de missão
-            missionButtonPanel.removeAll();
-            missionButtonPanel.setLayout(new GridBagLayout());
+        JButton botao_comecar = new JButton("Avançar");
+        botao_comecar.setVisible(true);
+        botao_comecar.addActionListener(e -> {
+            area_texto.setText("");
+            area_botoesmissao.removeAll();
+            area_botoesmissao.setLayout(new GridBagLayout());
 
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridx = 0;
@@ -314,65 +366,74 @@ public class JogoInterfaceGrafica {
             gbc.insets = new Insets(10, 20, 10, 20);
 
             for (int i = 0; i < options.length; i++) {
-                int choice = i;
-                JButton optionButton = new JButton("Opção " + (i + 1) + ": " + options[i]);
+                int escolha = i;
+                JButton botao_opcao = new JButton("Opção " + (i + 1) + ": " + options[i]);
 
-                optionButton.setBackground(Color.BLACK);
-                optionButton.setForeground(Color.WHITE);
-                optionButton.setFont(new Font("Arial", Font.BOLD, 16));
-                optionButton.setPreferredSize(new Dimension(frame.getWidth() - 200, 40));
+                botao_opcao.setBackground(Color.BLACK);
+                botao_opcao.setForeground(Color.WHITE);
+                botao_opcao.setFont(new Font("Arial", Font.BOLD, 16));
+                botao_opcao.setPreferredSize(new Dimension(frame.getWidth() - 200, 40));
 
-                optionButton.addActionListener(choiceEvent -> {
-                    jogo.EscolherOpcao(choice);
-                    updateText(jogo.getUltimaMensagem());
-                    clearMissionButtons();
-                    inMission = false;
-                    showStatus();
-                    executeAdditionalAction();
+                botao_opcao.addActionListener(choiceEvent -> {
+                    jogo.EscolherOpcao(escolha);
+                    AtualizarTexto(jogo.getUltimaMensagem());
+                    area_botoesmissao.removeAll();
+                    area_botoesmissao.revalidate();
+                    area_botoesmissao.repaint();
+                    dentro_missao = false;
+                    if (dentro_missao && !game_over) {
+                        jogo.MostrarStatus();
+                        area_status.setText(jogo.getUltimaMensagem());
+                    }
                 });
 
-                missionButtonPanel.add(optionButton, gbc);
+                area_botoesmissao.add(botao_opcao, gbc);
                 gbc.gridy++;
             }
 
-            avancarButton.setVisible(false); // Esconde o botão "Avançar"
-            exploreButton.setVisible(true); // Mostra o botão "Explorar Local"
-            restButton.setVisible(true); // Mostra o botão "Descansar"
-            if (textUpdater != null && !textUpdater.isDone()) {
-                textUpdater.cancel(true); // Cancela o texto gradual
+            botao_comecar.setVisible(false);
+            botao_explorar.setVisible(true);
+            botao_descansar.setVisible(true);
+            if (atualiza_texto != null && !atualiza_texto.isDone()) {
+                atualiza_texto.cancel(true);
             }
-            updateTextWithDot(); // Atualiza o texto com ponto
+            StyledDocument doc = area_texto.getStyledDocument();
+            SimpleAttributeSet blackDot = new SimpleAttributeSet();
+            StyleConstants.setForeground(blackDot, Color.white);
 
-            textBackgroundPanel.revalidate();
-            textBackgroundPanel.repaint();
+            SimpleAttributeSet defaultStyle = new SimpleAttributeSet();
+            StyleConstants.setForeground(defaultStyle, Color.white);
+            painel_fundo.revalidate();
+            painel_fundo.repaint();
 
+            try {
+                doc.remove(0, doc.getLength());
+                AjustarTamanhoTexto(".");
+                doc.setCharacterAttributes(0, doc.getLength(), defaultStyle, false);
+                area_texto.setCaretPosition(doc.getLength());
+            } catch (BadLocationException bl) {
+                bl.printStackTrace();
+            }
 
+            painel_fundo.revalidate();
+            painel_fundo.repaint();
 
-            if (gameOver) {
+            if (game_over) {
                 frame.dispose();
                 JOptionPane.showMessageDialog(frame, "GAME OVER! Obrigado por jogar!", "Fim do Jogo", JOptionPane.INFORMATION_MESSAGE);
                 System.exit(0);
                 return;
             }
 
-            missionButtonPanel.revalidate();
-            missionButtonPanel.repaint();
+            area_botoesmissao.revalidate();
+            area_botoesmissao.repaint();
         });
 
-        exploreButton.setVisible(false);
-        restButton.setVisible(false);
-        buttonPanel.add(avancarButton);
+        botao_explorar.setVisible(false);
+        botao_descansar.setVisible(false);
+        area_botoes.add(botao_comecar);
 
-        //missionButtonPanel.add(introPanel, BorderLayout.CENTER);
-        missionButtonPanel.revalidate();
-        missionButtonPanel.repaint();
-    }
-
-
-
-    private void clearMissionButtons() {
-        missionButtonPanel.removeAll();
-        missionButtonPanel.revalidate();
-        missionButtonPanel.repaint();
+        area_botoesmissao.revalidate();
+        area_botoesmissao.repaint();
     }
 }
