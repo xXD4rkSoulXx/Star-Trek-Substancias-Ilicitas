@@ -65,7 +65,7 @@ public class MissaoFlap extends Missao {
     }
 
     @Override
-    public String Executar(Nave nave, int escolha) {
+    public String executar(Nave nave, int escolha) {
         switch (escolha) {
             case 0:
                 // Esta opção não tira recursos pelo motivo de ser uma opção de GameOver
@@ -78,13 +78,13 @@ public class MissaoFlap extends Missao {
                 return jogo.getUltimaMensagem();
                 // -----------------------
             case 1:
-                nave.UsarRecursos(40, 0);
-                nave.AumentarReputacao(10);
-                nave.AdicionarSubstancias();
+                nave.usarRecursos(40, 0);
+                nave.aumentarReputacao(10);
+                nave.adicionarSubstancias();
                 return "Portal derrotado! O rei Flap recompensou você com o remédio Dosagem Máxima e prendeu o vilão Portal na cadeia, onde permanecerá eternamente.";
             default:
-                nave.UsarRecursos(0, 20);
-                nave.AumentarReputacao(40);
+                nave.usarRecursos(0, 20);
+                nave.aumentarReputacao(40);
                 return """
                         O rei Flap, completamente enfurecido, começou a destruir seu computador e ordenou ao Doutor Estudo \
                         que fosse atrás de você para Estudá-lo. Você correu o mais rápido possível e, por pouco, conseguiu escapar, \
