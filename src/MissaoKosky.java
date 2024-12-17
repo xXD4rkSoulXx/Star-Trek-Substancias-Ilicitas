@@ -1,4 +1,6 @@
 //Roteiro do Planeta Ansiedade, Missão do Rei Kosky
+// ---------------------------------
+// Uso de herança
 public class MissaoKosky extends Missao {
     // Uso de Polimorfismo, vindo da classe abstrata Missão
     // Os métodos mais abaixo com @override também são polimorfismo,
