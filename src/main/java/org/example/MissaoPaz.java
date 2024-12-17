@@ -68,19 +68,19 @@ public class MissaoPaz extends Missao {
     }
 
     @Override
-    public String Executar(Nave nave, int escolha) {
+    public String executar(Nave nave, int escolha) {
         switch (escolha) {
             case 0:
-                nave.UsarRecursos(20, 10);
-                nave.AumentarReputacao(10);
+                nave.usarRecursos(20, 10);
+                nave.aumentarReputacao(10);
                 return "Robert Iceman foi derrotado! Recursos gastos, mas a Moral subiu.";
             case 1:
-                nave.UsarRecursos(10, 0);
-                nave.PerderVida(20);
+                nave.usarRecursos(10, 0);
+                nave.perderVida(20);
                 return "Golpe financeiro! A perda de 500 euros em Solana abalou sua Energia e prejudicou sua Saúde.";
             default:
-                nave.UsarRecursos(0, 10);
-                nave.AdicionarSubstancias();
+                nave.usarRecursos(0, 10);
+                nave.adicionarSubstancias();
                 return """
                         Como pagamento, o Rei Paz entregou-lhe um pacote de Sal Grosso, mas em seguida ouviu-se sua \
                         voz irritada: ‘Quem foi o filho idiota que encomendou laranjas sem minha permissão? Não \

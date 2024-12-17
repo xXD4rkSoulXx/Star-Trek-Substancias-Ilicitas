@@ -59,18 +59,18 @@ public class MissaoJosue extends Missao {
     }
 
     @Override
-    public String Executar(Nave nave, int escolha) {
+    public String executar(Nave nave, int escolha) {
         switch (escolha) {
             case 0:
-                nave.UsarRecursos(30, 0);
-                nave.AumentarReputacao(30);
-                nave.AdicionarSubstancias();
+                nave.usarRecursos(30, 0);
+                nave.aumentarReputacao(30);
+                nave.adicionarSubstancias();
                 return "ENIAC vendido com sucesso! Como pagamento, você recebeu o mineral Germânico do Traficante Malphite.";
             case 1:
-                nave.UsarRecursos(30, 0);
+                nave.usarRecursos(30, 0);
                 return "Derrotou o Beraldo! Agora o rei Josué já não vai ser processado.";
             default:
-                nave.UsarRecursos(20, 30);
+                nave.usarRecursos(20, 30);
                 return """
                         Após devorar seu Big Mac e Barrinha Ritter, o rei Josué sofreu um infarto devido à obesidade e foi \
                         imediatamente levado ao hospital. Você fugiu rapidamente do planeta, antes que alguém suspeitasse de \

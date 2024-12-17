@@ -8,6 +8,6 @@ public abstract class Missao {
     // Essa vai ser o metodo responsável pelas opções a serem escolhidas por casa missão
     public abstract String[] getOpcoes();
     // Essa vai ser o metodo responsável por aplicar o que o jogador escolheu
-    public abstract String Executar(Nave nave, int escolha);
+    public abstract String executar(Nave nave, int escolha);
 }
 // ---------------------------------

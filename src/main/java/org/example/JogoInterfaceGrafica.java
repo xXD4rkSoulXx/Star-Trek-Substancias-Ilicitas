@@ -25,10 +25,10 @@ public class JogoInterfaceGrafica {
         areaBotoesmissao = new JPanel();
         painelSuperior = new JPanel();
         painelFundo = new JPanel();
-        ComecarJogo();
+        comecarJogo();
     }
 
-    private void ComecarJogo() {
+    private void comecarJogo() {
         // Título do Frame em cima da página
         frame = new JFrame("Star Trek: A rota das substâncias proibidas");
         // Faz com que feche o frame quando clicar no x de fechar
@@ -73,9 +73,9 @@ public class JogoInterfaceGrafica {
         painelSuperior.setBackground(Color.BLACK);
         // --------
 
-        // Botão Explorar
+        // Botão explorar
         // ---------------------------------------
-        botaoExplorar = new JButton("Explorar Local");
+        botaoExplorar = new JButton("explorar Local");
         botaoExplorar.setVisible(false);
         botaoExplorar.addActionListener(e -> {
             // Verifica se o jogador já ganhou
@@ -89,11 +89,11 @@ public class JogoInterfaceGrafica {
             // Verifica se o jogador já perdeu
             // --------
             if (!gameOver && !dentroMissao) {
-                jogo.Explorar();
-                AtualizarTexto(jogo.getUltimaMensagem());
-                if (jogo.DentroMissao()) {
+                jogo.explorar();
+                atualizarTexto(jogo.getUltimaMensagem());
+                if (jogo.dentroMissao()) {
                     dentroMissao = true;
-                    MeterBotoesMissao(jogo.getListaOpcoes());
+                    meterBotoesMissao(jogo.getListaOpcoes());
                 }
             }
             // --------
@@ -101,16 +101,16 @@ public class JogoInterfaceGrafica {
             // Verifica se o jogador já perdeu
             // --------
             if (dentroMissao && !gameOver) {
-                jogo.MostrarStatus();
+                jogo.mostrarStatus();
                 areaStatus.setText(jogo.getUltimaMensagem());
             }
             // --------
         });
         // ---------------------------------------
 
-        // Botão Descansar
+        // Botão descansar
         // ---------------------------------------
-        botaoDescansar = new JButton("Descansar");
+        botaoDescansar = new JButton("descansar");
         botaoDescansar.setVisible(false);
         botaoDescansar.addActionListener(e -> {
             // Verifica se o jogador já ganhou
@@ -123,15 +123,15 @@ public class JogoInterfaceGrafica {
             // Verifica se o jogador já perdeu
             // --------
             if (!gameOver && !dentroMissao) {
-                jogo.Descansar();
-                AtualizarTexto(jogo.getUltimaMensagem());
+                jogo.descansar();
+                atualizarTexto(jogo.getUltimaMensagem());
             }
             // --------
 
             // Verifica se o jogador já perdeu
             // --------
             if (dentroMissao && !gameOver) {
-                jogo.MostrarStatus();
+                jogo.mostrarStatus();
                 areaStatus.setText(jogo.getUltimaMensagem());
             }
             // --------
@@ -170,7 +170,7 @@ public class JogoInterfaceGrafica {
 
             try {
                 doc.remove(0, doc.getLength());
-                AjustarTamanhoTexto(".");
+                ajustarTamanhoTexto(".");
                 doc.setCharacterAttributes(0, doc.getLength(), estilo_default, false);
                 areaTexto.setCaretPosition(doc.getLength());
             } catch (BadLocationException bl) {
@@ -257,7 +257,7 @@ public class JogoInterfaceGrafica {
         // --------------
 
         // Atualização do texto de introdução
-        AtualizarTexto("""
+        atualizarTexto("""
                 Veggs, conhecido por suas loucuras, é um ex utilizador de drogas, porém reformado. \
                 Conhecido por já usar todos os tipos de drogas: Cannabis, Cocaína, Crack, Extasy, entre outras; \
                 ele cansou de usar as mesmas drogas repetitivamente, então ele pretende inovar e fazer uma livestream \
@@ -274,29 +274,29 @@ public class JogoInterfaceGrafica {
                 tudo o que houvesse ao redor e criar a fama que tem.""");
 
         if (dentroMissao && !gameOver) {
-            jogo.MostrarStatus();
+            jogo.mostrarStatus();
             areaStatus.setText(jogo.getUltimaMensagem());
         }
     }
 
-    private void AjustarTamanhoTexto(String message) {
+    private void ajustarTamanhoTexto(String messagem) {
         FontMetrics metrics = areaTexto.getFontMetrics(areaTexto.getFont());
         int linha_vertical = metrics.getHeight();
         int linha_horizontal = areaTexto.getWidth();
-        int linhas = (int) Math.ceil(metrics.stringWidth(message) / (double) linha_horizontal);
+        int linhas = (int) Math.ceil(metrics.stringWidth(messagem) / (double) linha_horizontal);
         int altura_necessaria = linhas * linha_vertical + 20;
 
         painelFundo.setPreferredSize(new Dimension(linha_horizontal, altura_necessaria));
         painelFundo.revalidate();
     }
 
-    private void AtualizarTexto(String message) {
+    private void atualizarTexto(String message) {
         if (atualizaTexto != null && !atualizaTexto.isDone()) {
             atualizaTexto.cancel(true);
         }
 
         areaTexto.setText("");
-        AjustarTamanhoTexto(message);
+        ajustarTamanhoTexto(message);
 
         atualizaTexto = new SwingWorker<>() {
             @Override
@@ -313,7 +313,7 @@ public class JogoInterfaceGrafica {
             protected void process(java.util.List<String> chunks) {
                 if (!isCancelled()) {
                     areaTexto.setText(chunks.get(chunks.size() - 1));
-                    AjustarTamanhoTexto(chunks.get(chunks.size() - 1));
+                    ajustarTamanhoTexto(chunks.get(chunks.size() - 1));
                 }
             }
 
@@ -339,8 +339,8 @@ public class JogoInterfaceGrafica {
         atualizaTexto.execute();
     }
 
-    private void MeterBotoesMissao(String[] opcoes) {
-        gameOver = jogo.getNave().AcabouRecurso();
+    private void meterBotoesMissao(String[] opcoes) {
+        gameOver = jogo.getNave().acabouRecurso();
 
         if (gameOver) {
             frame.dispose();
@@ -375,14 +375,14 @@ public class JogoInterfaceGrafica {
                 botaoOpcao.setPreferredSize(new Dimension(frame.getWidth() - 200, 40));
 
                 botaoOpcao.addActionListener(choiceEvent -> {
-                    jogo.EscolherOpcao(escolha);
-                    AtualizarTexto(jogo.getUltimaMensagem());
+                    jogo.escolherOpcao(escolha);
+                    atualizarTexto(jogo.getUltimaMensagem());
                     areaBotoesmissao.removeAll();
                     areaBotoesmissao.revalidate();
                     areaBotoesmissao.repaint();
                     dentroMissao = false;
                     if (dentroMissao && !gameOver) {
-                        jogo.MostrarStatus();
+                        jogo.mostrarStatus();
                         areaStatus.setText(jogo.getUltimaMensagem());
                     }
                 });
@@ -408,7 +408,7 @@ public class JogoInterfaceGrafica {
 
             try {
                 doc.remove(0, doc.getLength());
-                AjustarTamanhoTexto(".");
+                ajustarTamanhoTexto(".");
                 doc.setCharacterAttributes(0, doc.getLength(), defaultStyle, false);
                 areaTexto.setCaretPosition(doc.getLength());
             } catch (BadLocationException bl) {

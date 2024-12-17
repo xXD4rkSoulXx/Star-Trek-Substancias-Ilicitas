@@ -34,7 +34,7 @@ public class Jogador {
 
     // Metodo responsável por salvar os dados do jogador no ficheiro txt
     // --------------------------------------
-    public static void SalvarFicheiro(Jogador jogador, String caminho) {
+    public static void salvarFicheiro(Jogador jogador, String caminho) {
         File ficheiro = new File(caminho);
         // Cria a pasta e o ficheiro caso não exista, no caso se jogar pela primeira vez
         ficheiro.getParentFile().mkdirs();
@@ -50,7 +50,7 @@ public class Jogador {
 
     // Metodo responsável por carregar os dados do jogador do ficheiro txt
     // --------------------------------------
-    public static List<Jogador> CarregarFicheiro(String caminho) {
+    public static List<Jogador> carregarFicheiro(String caminho) {
         List<Jogador> jogadores = new ArrayList<>();
         // Lê o ficheiro com o BufferedReader
         try (BufferedReader lerFicheiro = new BufferedReader(new FileReader(caminho))) {

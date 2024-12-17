@@ -99,7 +99,7 @@ public class Nave {
     }
     // --------
 
-    public void UsarRecursos(int custoEnergia, int custoComida) {
+    public void usarRecursos(int custoEnergia, int custoComida) {
         if (gameOver) {
             return;
         }
@@ -114,7 +114,7 @@ public class Nave {
         }
     }
 
-    public void AdicionarSubstancias() {
+    public void adicionarSubstancias() {
         if (gameOver) {
             return;
         }
@@ -174,14 +174,14 @@ public class Nave {
         return this.substancias;
     }
 
-    public void AumentarReputacao(int quantidade) {
+    public void aumentarReputacao(int quantidade) {
         if (gameOver) {
             return;
         }
         this.reputacao += quantidade;
     }
 
-    public void PerderVida(int quantidade) {
+    public void perderVida(int quantidade) {
         if (gameOver) {
             return;
         }
@@ -192,7 +192,7 @@ public class Nave {
         }
     }
 
-    public String Descansar() {
+    public String descansar() {
         if (gameOver) {
             return "Você perdeu!";
         }
@@ -226,7 +226,7 @@ public class Nave {
 
     // Metodos necessários para a Interface
     // ---------------------------------
-    public boolean AcabouRecurso() {
+    public boolean acabouRecurso() {
         if (this.vida <= 0 || this.comida <= 0) {
             return true;
         } else return false;

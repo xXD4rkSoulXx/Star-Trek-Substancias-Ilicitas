@@ -18,10 +18,10 @@ public class JogoTelaInicial {
         // Necessário incializar a null, se não não deixa meter o nome do jogador
         // depois que ele cancela o JOptionPane
         nomePlayer = null;
-        IniciarJogo();
+        iniciarJogo();
     }
 
-    private void IniciarJogo() {
+    private void iniciarJogo() {
         // Título do Frame em cima da página
         frame = new JFrame("Star Trek: A rota das substâncias proibidas");
         // Faz com que feche o frame quando clicar no x de fechar
@@ -95,7 +95,7 @@ public class JogoTelaInicial {
                 String dataAtual = LocalDateTime.now().format(formatoData);
 
                 Jogador jogador = new Jogador(nomePlayer, dataAtual, nave.getSubstancias());
-                Jogador.SalvarFicheiro(jogador, caminhoPontuacao);
+                Jogador.salvarFicheiro(jogador, caminhoPontuacao);
                 // --------------------------------------
                 // Fecha o frame atual da tela incial
                 frame.dispose();
@@ -160,7 +160,7 @@ public class JogoTelaInicial {
             // Elementos da tabela
             // -----
             // Vai buscar os dados ao txt
-            List<Jogador> jogadores = Jogador.CarregarFicheiro(caminhoPontuacao);
+            List<Jogador> jogadores = Jogador.carregarFicheiro(caminhoPontuacao);
             // Mete os dados na tabela
             for (Jogador jogador : jogadores) {
                 modeloTabela.addRow(new String[]{jogador.getNome(), jogador.getDataAtual(), String.valueOf(jogador.getSubstancias())});

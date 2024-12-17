@@ -35,7 +35,7 @@ public class Final extends Missao {
     }
 
     @Override
-    public String Executar(Nave nave, int escolha) {
+    public String executar(Nave nave, int escolha) {
         return "";
     }
     // ----------------------------
