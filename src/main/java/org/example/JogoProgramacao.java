@@ -12,13 +12,17 @@ public class JogoProgramacao {
     private int contagemMissao;
     private String ultimaMensagem;
     private boolean gameOver;
+    private Random rand;
+    private String tituloEvento;
 
     public JogoProgramacao(String nomeJogador) {
-        this.missoes = criarMissoes();
-        this.missaoAtual = null;
-        this.contagemMissao = 0;
-        this.nave = new Nave(nomeJogador);
-        this.gameOver = false;
+        nave = new Nave(nomeJogador);
+        missoes = criarMissoes();
+        missaoAtual = null;
+        contagemMissao = 0;
+        gameOver = false;
+        rand = new Random();
+        tituloEvento = "Evento Aleatório";
     }
 
     // Encapsulamento
@@ -69,12 +73,12 @@ public class JogoProgramacao {
 
     public void escolherOpcao(int escolha) {
         // Verifica se já não é GameOver
-        if (this.missaoAtual != null && !gameOver) {
+        if (missaoAtual != null && !gameOver) {
             // Executa a missão e obtém a mensagem que aparece depois de cada escolha
-            this.ultimaMensagem = this.missaoAtual.executar(nave, escolha);
+            ultimaMensagem = missaoAtual.executar(nave, escolha);
 
             // Verifica se a mensagem tem "Você perdeu!" para ver se a opção escolhida dá GameOVer
-            if (this.ultimaMensagem.contains("Você perdeu!")) {
+            if (ultimaMensagem.contains("Você perdeu!")) {
                 gameOver = true;
                 JOptionPane.showMessageDialog(null, "Game Over! Você perdeu nesta missão.", "Fim de Jogo", JOptionPane.ERROR_MESSAGE);
             } else {
@@ -82,27 +86,27 @@ public class JogoProgramacao {
                 if (contagemMissao < 4) {
                     // Evento aleatório
                     // ----------------
-                    Random rand = new Random();
-
                     if (rand.nextInt(2) == 0) {
                         int evento = rand.nextInt(4);
 
                         switch (evento) {
                             case 0:
                                 this.nave.perderVida(rand.nextInt(20) + 10);
-                                JOptionPane.showMessageDialog(null, "Evento especial! Você perdeu vida inesperadamente.", "Evento Aleatório", JOptionPane.INFORMATION_MESSAGE);
+                                JOptionPane.showMessageDialog(null, "Evento especial! Você perdeu vida inesperadamente.", tituloEvento, JOptionPane.INFORMATION_MESSAGE);
                                 break;
                             case 1:
                                 this.nave.perderVida(-rand.nextInt(20) + 10);
-                                JOptionPane.showMessageDialog(null, "Evento especial! Você ganhou vida inesperadamente.", "Evento Aleatório", JOptionPane.INFORMATION_MESSAGE);
+                                JOptionPane.showMessageDialog(null, "Evento especial! Você ganhou vida inesperadamente.", tituloEvento, JOptionPane.INFORMATION_MESSAGE);
                                 break;
                             case 2:
                                 this.nave.usarRecursos(0, rand.nextInt(10) + 5);
-                                JOptionPane.showMessageDialog(null, "Evento especial! Você perdeu comida inesperadamente.", "Evento Aleatório", JOptionPane.INFORMATION_MESSAGE);
+                                JOptionPane.showMessageDialog(null, "Evento especial! Você perdeu comida inesperadamente.", tituloEvento, JOptionPane.INFORMATION_MESSAGE);
                                 break;
                             case 3:
                                 this.nave.usarRecursos(0, -rand.nextInt(10) + 5);
-                                JOptionPane.showMessageDialog(null, "Evento especial! Você perdeu ganhou inesperadamente.", "Evento Aleatório", JOptionPane.INFORMATION_MESSAGE);
+                                JOptionPane.showMessageDialog(null, "Evento especial! Você ganhou comida inesperadamente.", tituloEvento, JOptionPane.INFORMATION_MESSAGE);
+                                break;
+                            default:
                                 break;
                         }
                     }
@@ -118,18 +122,18 @@ public class JogoProgramacao {
         if (!gameOver) {
             // Verifica se já ganhou o jogo
             if (nave.getSubstancias() == 4) {
-                this.ultimaMensagem = "Você completou todas as missões!";
-                this.setMissaoAtual(null);
+                ultimaMensagem = "Você completou todas as missões!";
+                setMissaoAtual(null);
             } else {
                 // Verifica a contagem do planeta atual para dar a missão certa
-                this.missaoAtual = this.missoes.get(contagemMissao);
+                missaoAtual = missoes.get(contagemMissao);
                 // Recebe a história inicial do planeta
-                this.ultimaMensagem = this.missaoAtual.getMensagemIntroducao();
+                ultimaMensagem = missaoAtual.getMensagemIntroducao();
                 // Passa para a próxima missão
-                this.contagemMissao++;
+                contagemMissao++;
             }
         } else {
-            this.ultimaMensagem = "Jogo já acabou. Você perdeu.";
+            ultimaMensagem = "Jogo já acabou. Você perdeu.";
             JOptionPane.showMessageDialog(null, "Jogo já acabou. Você perdeu.", "Fim de Jogo", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -141,10 +145,10 @@ public class JogoProgramacao {
         if (!gameOver) {
             // Verifica se já ganhou o jogo
             if (contagemMissao == missoes.size()-1) {
-                this.ultimaMensagem = "Você completou todas as missões!";
-                this.setMissaoAtual(null);
+                ultimaMensagem = "Você completou todas as missões!";
+                setMissaoAtual(null);
             } else {
-                this.ultimaMensagem = this.nave.descansar();
+                ultimaMensagem = nave.descansar();
                 JOptionPane.showMessageDialog(null, "Descansando... " + this.ultimaMensagem, "Descanso", JOptionPane.INFORMATION_MESSAGE);
             }
         }
@@ -153,23 +157,23 @@ public class JogoProgramacao {
 
     public void mostrarStatus() {
         if (!gameOver) {
-            this.ultimaMensagem = this.nave.getStatus();
+            ultimaMensagem = nave.getStatus();
         }
     }
 
     // Metodo para criar as missões
     private List<Missao> criarMissoes() {
-        List<Missao> missoes = new ArrayList<>();
+        List<Missao> criarMissoes = new ArrayList<>();
 
         // Mete as missões por ordem
         // -----
-        missoes.add(new MissaoPaz());
-        missoes.add(new MissaoJosue());
-        missoes.add(new MissaoFlap());
-        missoes.add(new MissaoKosky());
-        missoes.add(new Final());
+        criarMissoes.add(new MissaoPaz());
+        criarMissoes.add(new MissaoJosue());
+        criarMissoes.add(new MissaoFlap());
+        criarMissoes.add(new MissaoKosky());
+        criarMissoes.add(new Final());
         // -----
 
-        return missoes;
+        return criarMissoes;
     }
 }

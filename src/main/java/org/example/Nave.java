@@ -162,8 +162,6 @@ public class Nave {
             }
             escreverFicheiro.close();
             // ------------
-
-            System.out.println("Jogador atualizado com sucesso!");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -200,7 +198,7 @@ public class Nave {
         // Verifica se a energia ou a vida já estão no máximo para impôr um limite
         // ------------
         if ((this.energia == 100) || (this.vida == 100)) {
-            this.random = r.nextInt(mensagemJadescansou.size());
+            random = r.nextInt(mensagemJadescansou.size());
             return this.mensagemJadescansou.get(random);
         } else {
             this.energia += 10;
@@ -212,7 +210,7 @@ public class Nave {
             if (this.vida > 100)
                 this.vida = 100;
 
-            this.random = r.nextInt(mensagemAcordar.size());
+            random = r.nextInt(mensagemAcordar.size());
             return this.mensagemAcordar.get(random);
         }
         // ------------
@@ -227,9 +225,7 @@ public class Nave {
     // Metodos necessários para a Interface
     // ---------------------------------
     public boolean acabouRecurso() {
-        if (this.vida <= 0 || this.comida <= 0) {
-            return true;
-        } else return false;
+        return this.vida <= 0 || this.comida <= 0;
     }
 
     public void setFrame(JFrame frame) {

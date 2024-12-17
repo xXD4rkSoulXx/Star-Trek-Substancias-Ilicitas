@@ -10,11 +10,13 @@ import java.awt.*;
 
 
 public class JogoTelaInicial {
-    private static final String caminhoPontuacao = "src/Players/jogadores.txt";
+    private static final String CaminhoPontuacao = "src/Players/jogadores.txt";
+    private String tipoLetra;
     private JFrame frame;
     private String nomePlayer;
 
     public JogoTelaInicial() {
+        tipoLetra="Arial";
         // Necessário incializar a null, se não não deixa meter o nome do jogador
         // depois que ele cancela o JOptionPane
         nomePlayer = null;
@@ -74,7 +76,7 @@ public class JogoTelaInicial {
         // ---------------------------------------
         JButton botaoComecar = new JButton("Iniciar");
         // Fonte e letra do botão
-        botaoComecar.setFont(new Font("Arial", Font.BOLD, 24));
+        botaoComecar.setFont(new Font(tipoLetra, Font.BOLD, 24));
         // Alinhado ao centro do frame
         botaoComecar.setAlignmentX(Component.CENTER_ALIGNMENT);
         // Quando clicar no botão começar
@@ -95,7 +97,7 @@ public class JogoTelaInicial {
                 String dataAtual = LocalDateTime.now().format(formatoData);
 
                 Jogador jogador = new Jogador(nomePlayer, dataAtual, nave.getSubstancias());
-                Jogador.salvarFicheiro(jogador, caminhoPontuacao);
+                Jogador.salvarFicheiro(jogador, CaminhoPontuacao);
                 // --------------------------------------
                 // Fecha o frame atual da tela incial
                 frame.dispose();
@@ -113,7 +115,7 @@ public class JogoTelaInicial {
         // Mesma lógica do botão de cima, só muda o nome do botão e a funcionalidade ao clicar
         // ---------------------------------------
         JButton botaoNome = new JButton("Inserir Nome");
-        botaoNome.setFont(new Font("Arial", Font.BOLD, 24));
+        botaoNome.setFont(new Font(tipoLetra, Font.BOLD, 24));
         botaoNome.setAlignmentX(Component.CENTER_ALIGNMENT);
         botaoNome.addActionListener(e -> {
             // Enquanto o nome tiver vazio, vai ficar a pedir nome
@@ -136,7 +138,7 @@ public class JogoTelaInicial {
         // Botão Pontuação
         // ---------------------------------------
         JButton botaoPontuacao = new JButton("Pontuação");
-        botaoPontuacao.setFont(new Font("Arial", Font.BOLD, 24));
+        botaoPontuacao.setFont(new Font(tipoLetra, Font.BOLD, 24));
         botaoPontuacao.setAlignmentX(Component.CENTER_ALIGNMENT);
         botaoPontuacao.addActionListener(e -> {
             //Abro uma tabela que vai aparecer todos os nomes do txt
@@ -160,7 +162,7 @@ public class JogoTelaInicial {
             // Elementos da tabela
             // -----
             // Vai buscar os dados ao txt
-            List<Jogador> jogadores = Jogador.carregarFicheiro(caminhoPontuacao);
+            List<Jogador> jogadores = Jogador.carregarFicheiro(CaminhoPontuacao);
             // Mete os dados na tabela
             for (Jogador jogador : jogadores) {
                 modeloTabela.addRow(new String[]{jogador.getNome(), jogador.getDataAtual(), String.valueOf(jogador.getSubstancias())});
@@ -183,7 +185,7 @@ public class JogoTelaInicial {
         // Botão Sair
         // ------
         JButton botaoSair = new JButton("Sair");
-        botaoSair.setFont(new Font("Arial", Font.BOLD, 24));
+        botaoSair.setFont(new Font(tipoLetra, Font.BOLD, 24));
         botaoSair.setAlignmentX(Component.CENTER_ALIGNMENT);
         botaoSair.addActionListener(e -> System.exit(0));
         painelBotoes.add(botaoSair);

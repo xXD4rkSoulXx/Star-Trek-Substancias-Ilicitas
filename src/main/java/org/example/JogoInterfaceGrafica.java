@@ -7,17 +7,29 @@ import java.net.URL;
 
 public class JogoInterfaceGrafica {
     private JFrame frame;
-    private JTextPane areaStatus, areaTexto;
-    private JPanel areaBotoes, areaBotoesmissao, painelSuperior, painelFundo;
-    private JButton botaoExplorar, botaoDescansar, botaoAvancar;
+    private JTextPane areaStatus;
+    private JTextPane areaTexto;
+    private JPanel areaBotoes;
+    private JPanel areaBotoesmissao;
+    private JPanel painelSuperior;
+    private JPanel painelFundo;
+    private JButton botaoExplorar;
+    private JButton botaoDescansar;
+    private JButton botaoAvancar;
     private JogoProgramacao jogo;
     private boolean dentroMissao = false;
     private boolean gameOver = false;
     private SwingWorker<Void, String> atualizaTexto;
     private String nomeJogador;
+    private String tipoLetra;
+    private String mensagemGameOver;
+    private String tituloGameOver;
 
     public JogoInterfaceGrafica(String nome) {
         this.nomeJogador = nome;
+        tipoLetra = "Arial";
+        mensagemGameOver = "GAME OVER! Obrigado por jogar!";
+        tituloGameOver = "Fim do Jogo";
         jogo = new JogoProgramacao(this.nomeJogador);
         areaStatus = new JTextPane();
         areaTexto = new JTextPane();
@@ -75,7 +87,7 @@ public class JogoInterfaceGrafica {
 
         // Botão explorar
         // ---------------------------------------
-        botaoExplorar = new JButton("explorar Local");
+        botaoExplorar = new JButton("Explorar Local");
         botaoExplorar.setVisible(false);
         botaoExplorar.addActionListener(e -> {
             // Verifica se o jogador já ganhou
@@ -110,7 +122,7 @@ public class JogoInterfaceGrafica {
 
         // Botão descansar
         // ---------------------------------------
-        botaoDescansar = new JButton("descansar");
+        botaoDescansar = new JButton("Descansar");
         botaoDescansar.setVisible(false);
         botaoDescansar.addActionListener(e -> {
             // Verifica se o jogador já ganhou
@@ -160,18 +172,18 @@ public class JogoInterfaceGrafica {
             // Remove o texto que está lá ao skipar
             // -------------------------------------
             StyledDocument doc = areaTexto.getStyledDocument();
-            SimpleAttributeSet ponto_preto = new SimpleAttributeSet();
-            StyleConstants.setForeground(ponto_preto, Color.white);
+            SimpleAttributeSet pontoPreto = new SimpleAttributeSet();
+            StyleConstants.setForeground(pontoPreto, Color.white);
 
-            SimpleAttributeSet estilo_default = new SimpleAttributeSet();
-            StyleConstants.setForeground(estilo_default, Color.white);
+            SimpleAttributeSet estiloDefault = new SimpleAttributeSet();
+            StyleConstants.setForeground(estiloDefault, Color.white);
             painelFundo.revalidate();
             painelFundo.repaint();
 
             try {
                 doc.remove(0, doc.getLength());
                 ajustarTamanhoTexto(".");
-                doc.setCharacterAttributes(0, doc.getLength(), estilo_default, false);
+                doc.setCharacterAttributes(0, doc.getLength(), estiloDefault, false);
                 areaTexto.setCaretPosition(doc.getLength());
             } catch (BadLocationException bl) {
                 bl.printStackTrace();
@@ -196,17 +208,17 @@ public class JogoInterfaceGrafica {
         areaStatus.setOpaque(true);
         areaStatus.setBackground(Color.BLACK);
         areaStatus.setEditable(false);
-        areaStatus.setFont(new Font("Arial", Font.BOLD, 16));
+        areaStatus.setFont(new Font(tipoLetra, Font.BOLD, 16));
         areaStatus.setForeground(Color.WHITE);
         painelSuperior.add(areaStatus, BorderLayout.CENTER);
         // ---------------------------------------
 
         // Painel flutuante do texto
         // ---------------------------------------
-        JPanel painel_flutuante = new JPanel();
-        painel_flutuante.setOpaque(false);
-        painel_flutuante.setLayout(new BoxLayout(painel_flutuante, BoxLayout.Y_AXIS));
-        painel_flutuante.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 20));
+        JPanel painelFlutuante = new JPanel();
+        painelFlutuante.setOpaque(false);
+        painelFlutuante.setLayout(new BoxLayout(painelFlutuante, BoxLayout.Y_AXIS));
+        painelFlutuante.setBorder(BorderFactory.createEmptyBorder(20, 20, 0, 20));
         // ---------------------------------------
 
         // Painel de fundo do texto
@@ -220,7 +232,7 @@ public class JogoInterfaceGrafica {
         // ---------------------------------------
         areaTexto.setOpaque(true);
         areaTexto.setEditable(false);
-        areaTexto.setFont(new Font("Arial", Font.BOLD, 16));
+        areaTexto.setFont(new Font(tipoLetra, Font.BOLD, 16));
         areaTexto.setForeground(Color.WHITE);
         areaTexto.setBackground(Color.BLACK);
 
@@ -235,16 +247,16 @@ public class JogoInterfaceGrafica {
         //Faz com que o painel fundo apareça no centro do ecrã
         // ---------------------------------------
         //Faz um espaço grande em cima
-        painel_flutuante.add(Box.createVerticalGlue());
-        painel_flutuante.add(painelFundo);
+        painelFlutuante.add(Box.createVerticalGlue());
+        painelFlutuante.add(painelFundo);
         //Faz um espaço grande em baixo
-        painel_flutuante.add(Box.createVerticalGlue());
+        painelFlutuante.add(Box.createVerticalGlue());
         // ---------------------------------------
 
         // Adiciona os painéis ao painel principal
         // --------------
         painelPrincipal.add(painelSuperior, BorderLayout.NORTH);
-        painelPrincipal.add(painel_flutuante, BorderLayout.SOUTH);
+        painelPrincipal.add(painelFlutuante, BorderLayout.SOUTH);
         // --------------
 
         // Configuração dos botões de missão
@@ -281,12 +293,12 @@ public class JogoInterfaceGrafica {
 
     private void ajustarTamanhoTexto(String messagem) {
         FontMetrics metrics = areaTexto.getFontMetrics(areaTexto.getFont());
-        int linha_vertical = metrics.getHeight();
-        int linha_horizontal = areaTexto.getWidth();
-        int linhas = (int) Math.ceil(metrics.stringWidth(messagem) / (double) linha_horizontal);
-        int altura_necessaria = linhas * linha_vertical + 20;
+        int linhaVertical = metrics.getHeight();
+        int linhaHorizontal = areaTexto.getWidth();
+        int linhas = (int) Math.ceil(metrics.stringWidth(messagem) / (double) linhaHorizontal);
+        int alturaNecessaria = linhas * linhaVertical + 20;
 
-        painelFundo.setPreferredSize(new Dimension(linha_horizontal, altura_necessaria));
+        painelFundo.setPreferredSize(new Dimension(linhaHorizontal, alturaNecessaria));
         painelFundo.revalidate();
     }
 
@@ -331,7 +343,7 @@ public class JogoInterfaceGrafica {
                         }
                     }
 
-                    JOptionPane.showMessageDialog(frame, "GAME OVER! Obrigado por jogar!", "Fim do Jogo", JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(frame, mensagemGameOver, tituloGameOver, JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         };
@@ -344,7 +356,7 @@ public class JogoInterfaceGrafica {
 
         if (gameOver) {
             frame.dispose();
-            JOptionPane.showMessageDialog(frame, "GAME OVER! Obrigado por jogar!", "Fim do Jogo", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(frame, mensagemGameOver, tituloGameOver, JOptionPane.INFORMATION_MESSAGE);
             System.exit(0);
             return;
         }
@@ -371,7 +383,7 @@ public class JogoInterfaceGrafica {
 
                 botaoOpcao.setBackground(Color.BLACK);
                 botaoOpcao.setForeground(Color.WHITE);
-                botaoOpcao.setFont(new Font("Arial", Font.BOLD, 16));
+                botaoOpcao.setFont(new Font(tipoLetra, Font.BOLD, 16));
                 botaoOpcao.setPreferredSize(new Dimension(frame.getWidth() - 200, 40));
 
                 botaoOpcao.addActionListener(choiceEvent -> {
@@ -420,7 +432,7 @@ public class JogoInterfaceGrafica {
 
             if (gameOver) {
                 frame.dispose();
-                JOptionPane.showMessageDialog(frame, "GAME OVER! Obrigado por jogar!", "Fim do Jogo", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(frame, mensagemGameOver, tituloGameOver, JOptionPane.INFORMATION_MESSAGE);
                 System.exit(0);
                 return;
             }

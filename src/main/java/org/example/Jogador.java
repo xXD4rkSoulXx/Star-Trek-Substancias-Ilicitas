@@ -20,15 +20,15 @@ public class Jogador {
     // Encapsulamento necessário
     // --------------------------------------
     public String getNome() {
-        return nome;
+        return this.nome;
     }
 
     public String getDataAtual() {
-        return dataAtual;
+        return this.dataAtual;
     }
 
     public int getSubstancias() {
-        return substancias;
+        return this.substancias;
     }
     // --------------------------------------
 
@@ -41,7 +41,7 @@ public class Jogador {
 
         // Escreve no ficheiro com o BufferedWriter
         try (BufferedWriter escreverFicheiro = new BufferedWriter(new FileWriter(caminho, true))) {
-            escreverFicheiro.write(String.format("%s;%s;%d\n", jogador.getNome(), jogador.getDataAtual(), jogador.getSubstancias()));
+            escreverFicheiro.write(String.format("%s;%s;%d%n", jogador.getNome(), jogador.getDataAtual(), jogador.getSubstancias()));
         } catch (IOException e) {
             e.printStackTrace();
         }
