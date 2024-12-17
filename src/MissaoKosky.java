@@ -65,11 +65,11 @@ public class MissaoKosky extends Missao {
     }
 
     @Override
-    public String Executar(Nave nave, int escolha) {
+    public String executar(Nave nave, int escolha) {
         switch (escolha) {
             case 0:
-                nave.UsarRecursos(20, 0);
-                nave.AdicionarSubstancias();
+                nave.usarRecursos(20, 0);
+                nave.adicionarSubstancias();
                 return """
                         Infelizmente, Post Malone superou sua performance musical com facilidade. O rei Kosky, ansioso, \
                         recorreu ao Opioide para lidar com a frustração e te ofereceu um também.""";
@@ -85,8 +85,8 @@ public class MissaoKosky extends Missao {
                 return jogo.getUltimaMensagem();
                 // -----------------------
             default:
-                nave.UsarRecursos(0, 5);
-                nave.PerderVida(20);
+                nave.usarRecursos(0, 5);
+                nave.perderVida(20);
                 return """
                         O rei Kosky, tomado pela ansiedade, acreditou que você havia dado chocolate à sua cadela \
                         por causa da cor, e agrediu-o sem pensar. Porém, ao perceber que era apenas ração, ele se \
