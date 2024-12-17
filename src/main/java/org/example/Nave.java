@@ -64,16 +64,11 @@ public class Nave {
         // Configurar as possíveis mensagens ao querer descansar com os Status máximo
         // --------------------------------------
         this.mensagemJadescansou = new ArrayList<>();
-        this.mensagemJadescansou.add("""
-                Baiano, eu sei que o sono ainda te chama, mas já acordaste! Agora é hora de ação!""");
-        this.mensagemJadescansou.add("""
-                Nada de descanso agora, Baiano! Já estás mais do que recuperado.""");
-        this.mensagemJadescansou.add("""
-                Baiano, nem mais um cochilo! Estás desperto, nada de tentar dormir de novo!""");
-        this.mensagemJadescansou.add("""
-                Baiano, nem adianta! Acabaste de acordar, então nada de voltas ao sono!""");
-        this.mensagemJadescansou.add("""
-                Descansar mais? Nem pensar, Baiano! Já estás pronto para a próxima!""");
+        this.mensagemJadescansou.add("Baiano, eu sei que o sono ainda te chama, mas já acordaste! Agora é hora de ação!");
+        this.mensagemJadescansou.add("Nada de descanso agora, Baiano! Já estás mais do que recuperado.");
+        this.mensagemJadescansou.add("Baiano, nem mais um cochilo! Estás desperto, nada de tentar dormir de novo!");
+        this.mensagemJadescansou.add("Baiano, nem adianta! Acabaste de acordar, então nada de voltas ao sono!");
+        this.mensagemJadescansou.add("Descansar mais? Nem pensar, Baiano! Já estás pronto para a próxima!");
         // --------------------------------------
     }
 

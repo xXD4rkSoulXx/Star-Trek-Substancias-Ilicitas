@@ -44,9 +44,9 @@ public class JogoInterfaceGrafica {
         // Título do Frame em cima da página
         frame = new JFrame("Star Trek: A rota das substâncias proibidas");
         // Faz com que feche o frame quando clicar no x de fechar
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         // Faz com que quando abra o frame, estique automaticamente a tela do ecrã
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setExtendedState(Frame.MAXIMIZED_BOTH);
         // Faz o frame ficar visível
         frame.setVisible(true);
 

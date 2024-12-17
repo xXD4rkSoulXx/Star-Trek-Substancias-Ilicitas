@@ -83,32 +83,30 @@ public class JogoProgramacao {
                 JOptionPane.showMessageDialog(null, "Game Over! Você perdeu nesta missão.", "Fim de Jogo", JOptionPane.ERROR_MESSAGE);
             } else {
                 // Faz com que não haja evento aleatório depois do Final
-                if (contagemMissao < 4) {
+                if (contagemMissao < 4 && rand.nextInt(2) == 0) {
                     // Evento aleatório
                     // ----------------
-                    if (rand.nextInt(2) == 0) {
-                        int evento = rand.nextInt(4);
+                    int evento = rand.nextInt(4);
 
-                        switch (evento) {
-                            case 0:
-                                this.nave.perderVida(rand.nextInt(20) + 10);
-                                JOptionPane.showMessageDialog(null, "Evento especial! Você perdeu vida inesperadamente.", tituloEvento, JOptionPane.INFORMATION_MESSAGE);
-                                break;
-                            case 1:
-                                this.nave.perderVida(-rand.nextInt(20) + 10);
-                                JOptionPane.showMessageDialog(null, "Evento especial! Você ganhou vida inesperadamente.", tituloEvento, JOptionPane.INFORMATION_MESSAGE);
-                                break;
-                            case 2:
-                                this.nave.usarRecursos(0, rand.nextInt(10) + 5);
-                                JOptionPane.showMessageDialog(null, "Evento especial! Você perdeu comida inesperadamente.", tituloEvento, JOptionPane.INFORMATION_MESSAGE);
-                                break;
-                            case 3:
-                                this.nave.usarRecursos(0, -rand.nextInt(10) + 5);
-                                JOptionPane.showMessageDialog(null, "Evento especial! Você ganhou comida inesperadamente.", tituloEvento, JOptionPane.INFORMATION_MESSAGE);
-                                break;
-                            default:
-                                break;
-                        }
+                    switch (evento) {
+                        case 0:
+                            this.nave.perderVida(rand.nextInt(20) + 10);
+                            JOptionPane.showMessageDialog(null, "Evento especial! Você perdeu vida inesperadamente.", tituloEvento, JOptionPane.INFORMATION_MESSAGE);
+                            break;
+                        case 1:
+                            this.nave.perderVida(-rand.nextInt(20) + 10);
+                            JOptionPane.showMessageDialog(null, "Evento especial! Você ganhou vida inesperadamente.", tituloEvento, JOptionPane.INFORMATION_MESSAGE);
+                            break;
+                        case 2:
+                            this.nave.usarRecursos(0, rand.nextInt(10) + 5);
+                            JOptionPane.showMessageDialog(null, "Evento especial! Você perdeu comida inesperadamente.", tituloEvento, JOptionPane.INFORMATION_MESSAGE);
+                            break;
+                        case 3:
+                            this.nave.usarRecursos(0, -rand.nextInt(10) + 5);
+                            JOptionPane.showMessageDialog(null, "Evento especial! Você ganhou comida inesperadamente.", tituloEvento, JOptionPane.INFORMATION_MESSAGE);
+                            break;
+                        default:
+                            break;
                     }
                     // ----------------
                 }

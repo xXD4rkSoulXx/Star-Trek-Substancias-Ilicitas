@@ -10,7 +10,7 @@ import java.awt.*;
 
 
 public class JogoTelaInicial {
-    private static final String CaminhoPontuacao = "src/Players/jogadores.txt";
+    private static final String CAMINHO_PONTUACAO = "src/Players/jogadores.txt";
     private String tipoLetra;
     private JFrame frame;
     private String nomePlayer;
@@ -27,9 +27,9 @@ public class JogoTelaInicial {
         // Título do Frame em cima da página
         frame = new JFrame("Star Trek: A rota das substâncias proibidas");
         // Faz com que feche o frame quando clicar no x de fechar
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         // Faz com que quando abra o frame, estique automaticamente a tela do ecrã
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setExtendedState(Frame.MAXIMIZED_BOTH);
         // Faz o frame ficar visível
         frame.setVisible(true);
 
@@ -97,7 +97,7 @@ public class JogoTelaInicial {
                 String dataAtual = LocalDateTime.now().format(formatoData);
 
                 Jogador jogador = new Jogador(nomePlayer, dataAtual, nave.getSubstancias());
-                Jogador.salvarFicheiro(jogador, CaminhoPontuacao);
+                Jogador.salvarFicheiro(jogador, CAMINHO_PONTUACAO);
                 // --------------------------------------
                 // Fecha o frame atual da tela incial
                 frame.dispose();
@@ -144,7 +144,7 @@ public class JogoTelaInicial {
             //Abro uma tabela que vai aparecer todos os nomes do txt
             JFrame tabelaPontuacao = new JFrame("Pontuação");
             tabelaPontuacao.setSize(600, 400);
-            tabelaPontuacao.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            tabelaPontuacao.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
             // Título da tabela
             // -----
@@ -162,7 +162,7 @@ public class JogoTelaInicial {
             // Elementos da tabela
             // -----
             // Vai buscar os dados ao txt
-            List<Jogador> jogadores = Jogador.carregarFicheiro(CaminhoPontuacao);
+            List<Jogador> jogadores = Jogador.carregarFicheiro(CAMINHO_PONTUACAO);
             // Mete os dados na tabela
             for (Jogador jogador : jogadores) {
                 modeloTabela.addRow(new String[]{jogador.getNome(), jogador.getDataAtual(), String.valueOf(jogador.getSubstancias())});
