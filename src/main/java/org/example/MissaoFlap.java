@@ -1,6 +1,8 @@
 package org.example;
 
 //Roteiro do Planeta Estudo, Missão do Rei Flap
+// ---------------------------------
+// Uso de herança
 public class MissaoFlap extends Missao {
     // Uso de Polimorfismo, vindo da classe abstrata Missão
     // Os métodos mais abaixo com @override também são polimorfismo,

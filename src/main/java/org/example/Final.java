@@ -1,6 +1,8 @@
 package org.example;
 
 //Roteiro do Planeta Veggs, Missão Final do Rei Veggs, entregar todas as Substâncias Proibidas
+// ---------------------------------
+// Uso de herança
 public class Final extends Missao {
     // Uso de Polimorfismo, vindo da classe abstrata Missão
     // Os métodos mais abaixo com @override também são polimorfismo,
