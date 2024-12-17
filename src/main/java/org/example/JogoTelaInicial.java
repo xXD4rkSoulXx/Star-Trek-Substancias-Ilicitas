@@ -10,14 +10,14 @@ import java.awt.*;
 
 
 public class JogoTelaInicial {
-    private static final String caminho_pontuacao = "src/Players/jogadores.txt";
+    private static final String caminhoPontuacao = "src/Players/jogadores.txt";
     private JFrame frame;
-    private String nome_player;
+    private String nomePlayer;
 
     public JogoTelaInicial() {
         // Necessário incializar a null, se não não deixa meter o nome do jogador
         // depois que ele cancela o JOptionPane
-        nome_player = null;
+        nomePlayer = null;
         IniciarJogo();
     }
 
@@ -33,15 +33,15 @@ public class JogoTelaInicial {
 
         // Bloco de código responsável por definir qual é o background
         // ---------------------------------------
-        ImageIcon icone_fundo;
-		Image imagem_fundo;
+        ImageIcon iconeFundo;
+		Image imagemFundo;
 		try {
-			URL caminho_imagem = getClass().getResource("/Images/image.png");
-			if (caminho_imagem == null) {
+			URL caminhoImagem = getClass().getResource("/Images/image.png");
+			if (caminhoImagem == null) {
 				throw new IllegalArgumentException("Imagem não encontrada: /Images/image.png");
 			}
-			icone_fundo = new ImageIcon(caminho_imagem);
-			imagem_fundo = icone_fundo.getImage().getScaledInstance(frame.getWidth(), frame.getHeight(), Image.SCALE_SMOOTH);
+			iconeFundo = new ImageIcon(caminhoImagem);
+			imagemFundo = iconeFundo.getImage().getScaledInstance(frame.getWidth(), frame.getHeight(), Image.SCALE_SMOOTH);
         } catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("Falha ao carregar a imagem.");
@@ -50,104 +50,104 @@ public class JogoTelaInicial {
 
         // Bloco de código responsável por fazer a imagem de fundo configurada aparecer
         // ---------------------------------------
-        JPanel painel_principal = new JPanel() {
+        JPanel painelPrincipal = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                g.drawImage(imagem_fundo, 0, 0, getWidth(), getHeight(), this);
+                g.drawImage(imagemFundo, 0, 0, getWidth(), getHeight(), this);
             }
         };
-        painel_principal.setLayout(new BorderLayout());
+        painelPrincipal.setLayout(new BorderLayout());
         // ---------------------------------------
 
         // Cria a área dos botões
         // ---------------------------------------
-        JPanel painel_botoes = new JPanel();
-        painel_botoes.setOpaque(false);
-        painel_botoes.setLayout(new BoxLayout(painel_botoes, BoxLayout.Y_AXIS));
+        JPanel painelBotoes = new JPanel();
+        painelBotoes.setOpaque(false);
+        painelBotoes.setLayout(new BoxLayout(painelBotoes, BoxLayout.Y_AXIS));
         // ---------------------------------------
 
         // Cria um espaço em cima dos botões para não ficar colado em cima
-        painel_botoes.add(Box.createVerticalStrut(50));
+        painelBotoes.add(Box.createVerticalStrut(50));
 
         // Configurações do botão começar jogo
         // ---------------------------------------
-        JButton botao_comecar = new JButton("Iniciar");
+        JButton botaoComecar = new JButton("Iniciar");
         // Fonte e letra do botão
-        botao_comecar.setFont(new Font("Arial", Font.BOLD, 24));
+        botaoComecar.setFont(new Font("Arial", Font.BOLD, 24));
         // Alinhado ao centro do frame
-        botao_comecar.setAlignmentX(Component.CENTER_ALIGNMENT);
+        botaoComecar.setAlignmentX(Component.CENTER_ALIGNMENT);
         // Quando clicar no botão começar
         // -------
-        botao_comecar.addActionListener(e -> {
+        botaoComecar.addActionListener(e -> {
             // Se o nome estiver vazio vai dizer que só posso inciar o jogo quando meter o nome
-            if (nome_player == null || nome_player.trim().isEmpty()) {
+            if (nomePlayer == null || nomePlayer.trim().isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "Por favor, insira o seu nome antes de começar!", "Erro", JOptionPane.ERROR_MESSAGE);
             } else {
                 // Guarda o nome do jogador no ficheiro
                 // --------------------------------------
-                Nave nave = new Nave(nome_player);
+                Nave nave = new Nave(nomePlayer);
                 nave.setFrame(frame);
 
                 // Formata a data para dia/mês/ano hora/minuto/segundo
-                DateTimeFormatter formato_data = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                DateTimeFormatter formatoData = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
                 // Obtém a data atual
-                String data_atual = LocalDateTime.now().format(formato_data);
+                String dataAtual = LocalDateTime.now().format(formatoData);
 
-                Jogador jogador = new Jogador(nome_player, data_atual, nave.getSubstancias());
-                Jogador.SalvarFicheiro(jogador, caminho_pontuacao);
+                Jogador jogador = new Jogador(nomePlayer, dataAtual, nave.getSubstancias());
+                Jogador.SalvarFicheiro(jogador, caminhoPontuacao);
                 // --------------------------------------
                 // Fecha o frame atual da tela incial
                 frame.dispose();
                 // Abre o frame do jogo
-                new JogoInterfaceGrafica(nome_player);
+                new JogoInterfaceGrafica(nomePlayer);
             }
         });
         // -------
-        painel_botoes.add(botao_comecar);
+        painelBotoes.add(botaoComecar);
         // ---------------------------------------
 
         // Espaço entre os botões começar e nome
-        painel_botoes.add(Box.createVerticalStrut(20));
+        painelBotoes.add(Box.createVerticalStrut(20));
 
         // Mesma lógica do botão de cima, só muda o nome do botão e a funcionalidade ao clicar
         // ---------------------------------------
-        JButton botao_nome = new JButton("Inserir Nome");
-        botao_nome.setFont(new Font("Arial", Font.BOLD, 24));
-        botao_nome.setAlignmentX(Component.CENTER_ALIGNMENT);
-        botao_nome.addActionListener(e -> {
+        JButton botaoNome = new JButton("Inserir Nome");
+        botaoNome.setFont(new Font("Arial", Font.BOLD, 24));
+        botaoNome.setAlignmentX(Component.CENTER_ALIGNMENT);
+        botaoNome.addActionListener(e -> {
             // Enquanto o nome tiver vazio, vai ficar a pedir nome
-            while (nome_player == null || nome_player.trim().isEmpty()) {
-                nome_player = JOptionPane.showInputDialog(frame, "Digite o seu nome:", "Nome do Jogador", JOptionPane.QUESTION_MESSAGE);
-                if (nome_player == null) {
+            while (nomePlayer == null || nomePlayer.trim().isEmpty()) {
+                nomePlayer = JOptionPane.showInputDialog(frame, "Digite o seu nome:", "Nome do Jogador", JOptionPane.QUESTION_MESSAGE);
+                if (nomePlayer == null) {
                     JOptionPane.showMessageDialog(frame, "Você precisa inserir um nome para continuar!", "Aviso", JOptionPane.WARNING_MESSAGE);
-                } else if (nome_player.trim().isEmpty()) {
+                } else if (nomePlayer.trim().isEmpty()) {
                     JOptionPane.showMessageDialog(frame, "O nome não pode estar vazio. Tente novamente.", "Erro", JOptionPane.ERROR_MESSAGE);
                 }
             }
-            JOptionPane.showMessageDialog(frame, "Bem-vindo, " + nome_player + "!", "Nome Registado", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(frame, "Bem-vindo, " + nomePlayer + "!", "Nome Registado", JOptionPane.INFORMATION_MESSAGE);
         });
 
-        painel_botoes.add(botao_nome);
+        painelBotoes.add(botaoNome);
         // ---------------------------------------
 
-        painel_botoes.add(Box.createVerticalStrut(20));
+        painelBotoes.add(Box.createVerticalStrut(20));
 
         // Botão Pontuação
         // ---------------------------------------
-        JButton botao_pontuacao = new JButton("Pontuação");
-        botao_pontuacao.setFont(new Font("Arial", Font.BOLD, 24));
-        botao_pontuacao.setAlignmentX(Component.CENTER_ALIGNMENT);
-        botao_pontuacao.addActionListener(e -> {
+        JButton botaoPontuacao = new JButton("Pontuação");
+        botaoPontuacao.setFont(new Font("Arial", Font.BOLD, 24));
+        botaoPontuacao.setAlignmentX(Component.CENTER_ALIGNMENT);
+        botaoPontuacao.addActionListener(e -> {
             //Abro uma tabela que vai aparecer todos os nomes do txt
-            JFrame tabela_pontuacao = new JFrame("Pontuação");
-            tabela_pontuacao.setSize(600, 400);
-            tabela_pontuacao.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            JFrame tabelaPontuacao = new JFrame("Pontuação");
+            tabelaPontuacao.setSize(600, 400);
+            tabelaPontuacao.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
             // Título da tabela
             // -----
-            String[] lista_nomes = {"Nome do Jogador", "Data e Hora", "Substâncias"};
-            DefaultTableModel modelo_tabela = new DefaultTableModel(lista_nomes, 0) {
+            String[] listaNomes = {"Nome do Jogador", "Data e Hora", "Substâncias"};
+            DefaultTableModel modeloTabela = new DefaultTableModel(listaNomes, 0) {
                 // Faz com que os elementos da tabela não possam ser editados,
                 // atravês do uso de polimorfismo dum metodo criado na classe DefaultTableModel
                 @Override
@@ -160,38 +160,39 @@ public class JogoTelaInicial {
             // Elementos da tabela
             // -----
             // Vai buscar os dados ao txt
-            List<Jogador> jogadores = Jogador.CarregarFicheiro(caminho_pontuacao);
+            List<Jogador> jogadores = Jogador.CarregarFicheiro(caminhoPontuacao);
             // Mete os dados na tabela
             for (Jogador jogador : jogadores) {
-                modelo_tabela.addRow(new String[]{jogador.getNome(), jogador.getDataAtual(), String.valueOf(jogador.getSubstancias())});
+                modeloTabela.addRow(new String[]{jogador.getNome(), jogador.getDataAtual(), String.valueOf(jogador.getSubstancias())});
             }
             // -----
 
-            JTable tabela = new JTable(modelo_tabela);
-            JScrollPane scrollPane = new JScrollPane(tabela);
+            JTable tabela = new JTable(modeloTabela);
+            // Barra de scroll
+            JScrollPane scroll = new JScrollPane(tabela);
 
-            tabela_pontuacao.add(scrollPane);
-            tabela_pontuacao.setVisible(true);
+            tabelaPontuacao.add(scroll);
+            tabelaPontuacao.setVisible(true);
         });
-        painel_botoes.add(botao_pontuacao);
+        painelBotoes.add(botaoPontuacao);
         // ---------------------------------------
 
         // Dá aquele espaço grande entre o botão pontuação e o botão sair
-        painel_botoes.add(Box.createVerticalGlue());
+        painelBotoes.add(Box.createVerticalGlue());
 
         // Botão Sair
         // ------
-        JButton botao_sair = new JButton("Sair");
-        botao_sair.setFont(new Font("Arial", Font.BOLD, 24));
-        botao_sair.setAlignmentX(Component.CENTER_ALIGNMENT);
-        botao_sair.addActionListener(e -> System.exit(0));
-        painel_botoes.add(botao_sair);
+        JButton botaoSair = new JButton("Sair");
+        botaoSair.setFont(new Font("Arial", Font.BOLD, 24));
+        botaoSair.setAlignmentX(Component.CENTER_ALIGNMENT);
+        botaoSair.addActionListener(e -> System.exit(0));
+        painelBotoes.add(botaoSair);
         // ---------------------------------------
 
-        painel_botoes.add(Box.createVerticalStrut(50));
+        painelBotoes.add(Box.createVerticalStrut(50));
 
         // Adiciona os botões ao painel
-        painel_principal.add(painel_botoes, BorderLayout.CENTER);
-        frame.add(painel_principal);
+        painelPrincipal.add(painelBotoes, BorderLayout.CENTER);
+        frame.add(painelPrincipal);
     }
 }

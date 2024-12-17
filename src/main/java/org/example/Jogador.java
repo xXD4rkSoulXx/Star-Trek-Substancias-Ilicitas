@@ -6,14 +6,14 @@ import java.util.List;
 
 public class Jogador {
     private String nome;
-    private String data_atual;
+    private String dataAtual;
     private int substancias;
 
     // Os parâmetros do construtor é para obrigar um jogador a apenas ser criado
     // quando tiver estes status essências
-    public Jogador(String nome, String data_atual, int substancias) {
+    public Jogador(String nome, String dataAtual, int substancias) {
         this.nome = nome;
-        this.data_atual = data_atual;
+        this.dataAtual = dataAtual;
         this.substancias = substancias;
     }
 
@@ -24,7 +24,7 @@ public class Jogador {
     }
 
     public String getDataAtual() {
-        return data_atual;
+        return dataAtual;
     }
 
     public int getSubstancias() {
@@ -40,8 +40,8 @@ public class Jogador {
         ficheiro.getParentFile().mkdirs();
 
         // Escreve no ficheiro com o BufferedWriter
-        try (BufferedWriter escrever_ficheiro = new BufferedWriter(new FileWriter(caminho, true))) {
-            escrever_ficheiro.write(String.format("%s;%s;%d\n", jogador.getNome(), jogador.getDataAtual(), jogador.getSubstancias()));
+        try (BufferedWriter escreverFicheiro = new BufferedWriter(new FileWriter(caminho, true))) {
+            escreverFicheiro.write(String.format("%s;%s;%d\n", jogador.getNome(), jogador.getDataAtual(), jogador.getSubstancias()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -53,10 +53,10 @@ public class Jogador {
     public static List<Jogador> CarregarFicheiro(String caminho) {
         List<Jogador> jogadores = new ArrayList<>();
         // Lê o ficheiro com o BufferedReader
-        try (BufferedReader ler_ficheiro = new BufferedReader(new FileReader(caminho))) {
+        try (BufferedReader lerFicheiro = new BufferedReader(new FileReader(caminho))) {
             String linha;
             // Enquanto não chegar ao final do ficheiro, vai continuar a ler
-            while ((linha = ler_ficheiro.readLine()) != null) {
+            while ((linha = lerFicheiro.readLine()) != null) {
                 // Vê os dados contidos por ponto e vírgula para distinguir entre o nome, data e substâncias
                 String[] dados = linha.split(";");
                 // Quando for 3 dados, ele adiciona o jogador, pois cada jogador tem 3 status

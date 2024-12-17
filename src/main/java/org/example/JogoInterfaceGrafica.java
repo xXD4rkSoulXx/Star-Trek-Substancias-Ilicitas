@@ -7,24 +7,24 @@ import java.net.URL;
 
 public class JogoInterfaceGrafica {
     private JFrame frame;
-    private JTextPane area_status, area_texto;
-    private JPanel area_botoes, area_botoesmissao, painel_superior, painel_fundo;
-    private JButton botao_explorar, botao_descansar, botao_avancar;
+    private JTextPane areaStatus, areaTexto;
+    private JPanel areaBotoes, areaBotoesmissao, painelSuperior, painelFundo;
+    private JButton botaoExplorar, botaoDescansar, botaoAvancar;
     private JogoProgramacao jogo;
-    private boolean dentro_missao = false;
-    private boolean game_over = false;
-    private SwingWorker<Void, String> atualiza_texto;
-    private String nome_jogador;
+    private boolean dentroMissao = false;
+    private boolean gameOver = false;
+    private SwingWorker<Void, String> atualizaTexto;
+    private String nomeJogador;
 
     public JogoInterfaceGrafica(String nome) {
-        this.nome_jogador = nome;
-        jogo = new JogoProgramacao(this.nome_jogador);
-        area_status = new JTextPane();
-        area_texto = new JTextPane();
-        area_botoes = new JPanel();
-        area_botoesmissao = new JPanel();
-        painel_superior = new JPanel();
-        painel_fundo = new JPanel();
+        this.nomeJogador = nome;
+        jogo = new JogoProgramacao(this.nomeJogador);
+        areaStatus = new JTextPane();
+        areaTexto = new JTextPane();
+        areaBotoes = new JPanel();
+        areaBotoesmissao = new JPanel();
+        painelSuperior = new JPanel();
+        painelFundo = new JPanel();
         ComecarJogo();
     }
 
@@ -40,15 +40,15 @@ public class JogoInterfaceGrafica {
 
         // Bloco de código responsável por definir qual é o background
         // ---------------------------------------
-        ImageIcon icone_fundo;
-        Image imagem_fundo;
+        ImageIcon iconeFundo;
+        Image imagemFundo;
         try {
-            URL caminho_imagem = getClass().getResource("/Images/image.png");
-            if (caminho_imagem == null) {
+            URL caminhoImagem = getClass().getResource("/Images/image.png");
+            if (caminhoImagem == null) {
                 throw new IllegalArgumentException("Imagem não encontrada: /Images/image.png");
             }
-            icone_fundo = new ImageIcon(caminho_imagem);
-            imagem_fundo = icone_fundo.getImage().getScaledInstance(frame.getWidth(), frame.getHeight(), Image.SCALE_SMOOTH);
+            iconeFundo = new ImageIcon(caminhoImagem);
+            imagemFundo = iconeFundo.getImage().getScaledInstance(frame.getWidth(), frame.getHeight(), Image.SCALE_SMOOTH);
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Falha ao carregar a imagem.");
@@ -57,42 +57,42 @@ public class JogoInterfaceGrafica {
 
         // Bloco de código responsável por fazer a imagem de fundo configurada aparecer
         // ---------------------------------------
-        JPanel painel_principal = new JPanel() {
+        JPanel painelPrincipal = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                g.drawImage(imagem_fundo, 0, 0, getWidth(), getHeight(), this);
+                g.drawImage(imagemFundo, 0, 0, getWidth(), getHeight(), this);
             }
         };
-        painel_principal.setLayout(new BorderLayout());
+        painelPrincipal.setLayout(new BorderLayout());
         // ---------------------------------------
 
         // Configuração do painel superior
         // --------
-        painel_superior.setLayout(new BorderLayout());
-        painel_superior.setBackground(Color.BLACK);
+        painelSuperior.setLayout(new BorderLayout());
+        painelSuperior.setBackground(Color.BLACK);
         // --------
 
         // Botão Explorar
         // ---------------------------------------
-        botao_explorar = new JButton("Explorar Local");
-        botao_explorar.setVisible(false);
-        botao_explorar.addActionListener(e -> {
+        botaoExplorar = new JButton("Explorar Local");
+        botaoExplorar.setVisible(false);
+        botaoExplorar.addActionListener(e -> {
             // Verifica se o jogador já ganhou
             // --------
             if (jogo.getNave().getSubstancias() == 4){
-                area_status.setText("Acabou o jogo!");
+                areaStatus.setText("Acabou o jogo!");
                 return;
             }
             // --------
 
             // Verifica se o jogador já perdeu
             // --------
-            if (!game_over && !dentro_missao) {
+            if (!gameOver && !dentroMissao) {
                 jogo.Explorar();
                 AtualizarTexto(jogo.getUltimaMensagem());
                 if (jogo.DentroMissao()) {
-                    dentro_missao = true;
+                    dentroMissao = true;
                     MeterBotoesMissao(jogo.getListaOpcoes());
                 }
             }
@@ -100,9 +100,9 @@ public class JogoInterfaceGrafica {
 
             // Verifica se o jogador já perdeu
             // --------
-            if (dentro_missao && !game_over) {
+            if (dentroMissao && !gameOver) {
                 jogo.MostrarStatus();
-                area_status.setText(jogo.getUltimaMensagem());
+                areaStatus.setText(jogo.getUltimaMensagem());
             }
             // --------
         });
@@ -110,9 +110,9 @@ public class JogoInterfaceGrafica {
 
         // Botão Descansar
         // ---------------------------------------
-        botao_descansar = new JButton("Descansar");
-        botao_descansar.setVisible(false);
-        botao_descansar.addActionListener(e -> {
+        botaoDescansar = new JButton("Descansar");
+        botaoDescansar.setVisible(false);
+        botaoDescansar.addActionListener(e -> {
             // Verifica se o jogador já ganhou
             // --------
             if (jogo.getNave().getSubstancias() == 4){
@@ -122,7 +122,7 @@ public class JogoInterfaceGrafica {
 
             // Verifica se o jogador já perdeu
             // --------
-            if (!game_over && !dentro_missao) {
+            if (!gameOver && !dentroMissao) {
                 jogo.Descansar();
                 AtualizarTexto(jogo.getUltimaMensagem());
             }
@@ -130,9 +130,9 @@ public class JogoInterfaceGrafica {
 
             // Verifica se o jogador já perdeu
             // --------
-            if (dentro_missao && !game_over) {
+            if (dentroMissao && !gameOver) {
                 jogo.MostrarStatus();
-                area_status.setText(jogo.getUltimaMensagem());
+                areaStatus.setText(jogo.getUltimaMensagem());
             }
             // --------
         });
@@ -140,39 +140,39 @@ public class JogoInterfaceGrafica {
 
         // Botão Avançar
         // ---------------------------------------
-        botao_avancar = new JButton("Avançar");
-        botao_avancar.setVisible(true);
-        botao_avancar.addActionListener(e -> {
+        botaoAvancar = new JButton("Avançar");
+        botaoAvancar.setVisible(true);
+        botaoAvancar.addActionListener(e -> {
             // Mete o botão Avançar invisível e faz aparecer os outros botões
             // --------
-            botao_avancar.setVisible(false);
-            botao_explorar.setVisible(true);
-            botao_descansar.setVisible(true);
+            botaoAvancar.setVisible(false);
+            botaoExplorar.setVisible(true);
+            botaoDescansar.setVisible(true);
             // --------
 
             // Quando clico no botão avançar, ele faz o texto parar de aparecer para skipar
             // --------
-            if (atualiza_texto != null && !atualiza_texto.isDone()) {
-                atualiza_texto.cancel(true);
+            if (atualizaTexto != null && !atualizaTexto.isDone()) {
+                atualizaTexto.cancel(true);
             }
             // --------
 
             // Remove o texto que está lá ao skipar
             // -------------------------------------
-            StyledDocument doc = area_texto.getStyledDocument();
+            StyledDocument doc = areaTexto.getStyledDocument();
             SimpleAttributeSet ponto_preto = new SimpleAttributeSet();
             StyleConstants.setForeground(ponto_preto, Color.white);
 
             SimpleAttributeSet estilo_default = new SimpleAttributeSet();
             StyleConstants.setForeground(estilo_default, Color.white);
-            painel_fundo.revalidate();
-            painel_fundo.repaint();
+            painelFundo.revalidate();
+            painelFundo.repaint();
 
             try {
                 doc.remove(0, doc.getLength());
                 AjustarTamanhoTexto(".");
                 doc.setCharacterAttributes(0, doc.getLength(), estilo_default, false);
-                area_texto.setCaretPosition(doc.getLength());
+                areaTexto.setCaretPosition(doc.getLength());
             } catch (BadLocationException bl) {
                 bl.printStackTrace();
             }
@@ -182,23 +182,23 @@ public class JogoInterfaceGrafica {
 
         // Painel dos botões
         // ---------------------------------------
-        area_botoes = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        area_botoes.setOpaque(false);
-        area_botoes.add(botao_avancar);
-        area_botoes.add(botao_explorar);
-        area_botoes.add(botao_descansar);
-        painel_superior.add(area_botoes, BorderLayout.EAST);
+        areaBotoes = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        areaBotoes.setOpaque(false);
+        areaBotoes.add(botaoAvancar);
+        areaBotoes.add(botaoExplorar);
+        areaBotoes.add(botaoDescansar);
+        painelSuperior.add(areaBotoes, BorderLayout.EAST);
         // ---------------------------------------
 
         // Área de status da missão
         // ---------------------------------------
-        area_status = new JTextPane();
-        area_status.setOpaque(true);
-        area_status.setBackground(Color.BLACK);
-        area_status.setEditable(false);
-        area_status.setFont(new Font("Arial", Font.BOLD, 16));
-        area_status.setForeground(Color.WHITE);
-        painel_superior.add(area_status, BorderLayout.CENTER);
+        areaStatus = new JTextPane();
+        areaStatus.setOpaque(true);
+        areaStatus.setBackground(Color.BLACK);
+        areaStatus.setEditable(false);
+        areaStatus.setFont(new Font("Arial", Font.BOLD, 16));
+        areaStatus.setForeground(Color.WHITE);
+        painelSuperior.add(areaStatus, BorderLayout.CENTER);
         // ---------------------------------------
 
         // Painel flutuante do texto
@@ -211,49 +211,49 @@ public class JogoInterfaceGrafica {
 
         // Painel de fundo do texto
         // ---------------------------------------
-        painel_fundo.setBackground(Color.BLACK);
-        painel_fundo.setPreferredSize(new Dimension(600, 100));
-        painel_fundo.setLayout(new BorderLayout());
+        painelFundo.setBackground(Color.BLACK);
+        painelFundo.setPreferredSize(new Dimension(600, 100));
+        painelFundo.setLayout(new BorderLayout());
         // ---------------------------------------
 
         // Configuração da área do texto
         // ---------------------------------------
-        area_texto.setOpaque(true);
-        area_texto.setEditable(false);
-        area_texto.setFont(new Font("Arial", Font.BOLD, 16));
-        area_texto.setForeground(Color.WHITE);
-        area_texto.setBackground(Color.BLACK);
+        areaTexto.setOpaque(true);
+        areaTexto.setEditable(false);
+        areaTexto.setFont(new Font("Arial", Font.BOLD, 16));
+        areaTexto.setForeground(Color.WHITE);
+        areaTexto.setBackground(Color.BLACK);
 
-        StyledDocument doc = area_texto.getStyledDocument();
+        StyledDocument doc = areaTexto.getStyledDocument();
         SimpleAttributeSet center = new SimpleAttributeSet();
         StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
         doc.setParagraphAttributes(0, doc.getLength(), center, false);
 
-        painel_fundo.add(area_texto, BorderLayout.CENTER);
+        painelFundo.add(areaTexto, BorderLayout.CENTER);
         // ---------------------------------------
 
         //Faz com que o painel fundo apareça no centro do ecrã
         // ---------------------------------------
         //Faz um espaço grande em cima
         painel_flutuante.add(Box.createVerticalGlue());
-        painel_flutuante.add(painel_fundo);
+        painel_flutuante.add(painelFundo);
         //Faz um espaço grande em baixo
         painel_flutuante.add(Box.createVerticalGlue());
         // ---------------------------------------
 
         // Adiciona os painéis ao painel principal
         // --------------
-        painel_principal.add(painel_superior, BorderLayout.NORTH);
-        painel_principal.add(painel_flutuante, BorderLayout.SOUTH);
+        painelPrincipal.add(painelSuperior, BorderLayout.NORTH);
+        painelPrincipal.add(painel_flutuante, BorderLayout.SOUTH);
         // --------------
 
         // Configuração dos botões de missão
         // --------------
-        area_botoesmissao = new JPanel();
-        area_botoesmissao.setLayout(new GridBagLayout());
-        area_botoesmissao.setOpaque(false);
-        painel_principal.add(area_botoesmissao, BorderLayout.CENTER);
-        frame.add(painel_principal);
+        areaBotoesmissao = new JPanel();
+        areaBotoesmissao.setLayout(new GridBagLayout());
+        areaBotoesmissao.setOpaque(false);
+        painelPrincipal.add(areaBotoesmissao, BorderLayout.CENTER);
+        frame.add(painelPrincipal);
         // --------------
 
         // Atualização do texto de introdução
@@ -273,32 +273,32 @@ public class JogoInterfaceGrafica {
                 transformou essa fraqueza de nariz grande em uma força, já que usou o nariz a seu favor para cheirar \
                 tudo o que houvesse ao redor e criar a fama que tem.""");
 
-        if (dentro_missao && !game_over) {
+        if (dentroMissao && !gameOver) {
             jogo.MostrarStatus();
-            area_status.setText(jogo.getUltimaMensagem());
+            areaStatus.setText(jogo.getUltimaMensagem());
         }
     }
 
     private void AjustarTamanhoTexto(String message) {
-        FontMetrics metrics = area_texto.getFontMetrics(area_texto.getFont());
+        FontMetrics metrics = areaTexto.getFontMetrics(areaTexto.getFont());
         int linha_vertical = metrics.getHeight();
-        int linha_horizontal = area_texto.getWidth();
+        int linha_horizontal = areaTexto.getWidth();
         int linhas = (int) Math.ceil(metrics.stringWidth(message) / (double) linha_horizontal);
         int altura_necessaria = linhas * linha_vertical + 20;
 
-        painel_fundo.setPreferredSize(new Dimension(linha_horizontal, altura_necessaria));
-        painel_fundo.revalidate();
+        painelFundo.setPreferredSize(new Dimension(linha_horizontal, altura_necessaria));
+        painelFundo.revalidate();
     }
 
     private void AtualizarTexto(String message) {
-        if (atualiza_texto != null && !atualiza_texto.isDone()) {
-            atualiza_texto.cancel(true);
+        if (atualizaTexto != null && !atualizaTexto.isDone()) {
+            atualizaTexto.cancel(true);
         }
 
-        area_texto.setText("");
+        areaTexto.setText("");
         AjustarTamanhoTexto(message);
 
-        atualiza_texto = new SwingWorker<>() {
+        atualizaTexto = new SwingWorker<>() {
             @Override
             protected Void doInBackground() throws InterruptedException {
                 for (int i = 0; i < message.length(); i++) {
@@ -312,7 +312,7 @@ public class JogoInterfaceGrafica {
             @Override
             protected void process(java.util.List<String> chunks) {
                 if (!isCancelled()) {
-                    area_texto.setText(chunks.get(chunks.size() - 1));
+                    areaTexto.setText(chunks.get(chunks.size() - 1));
                     AjustarTamanhoTexto(chunks.get(chunks.size() - 1));
                 }
             }
@@ -320,12 +320,12 @@ public class JogoInterfaceGrafica {
             @Override
             protected void done() {
                 if (!isCancelled() && message.contains("GAME OVER")) {
-                    game_over = true;
+                    gameOver = true;
 
-                    botao_explorar.setEnabled(false);
-                    botao_descansar.setEnabled(false);
+                    botaoExplorar.setEnabled(false);
+                    botaoDescansar.setEnabled(false);
 
-                    for (Component comp : area_botoesmissao.getComponents()) {
+                    for (Component comp : areaBotoesmissao.getComponents()) {
                         if (comp instanceof JButton) {
                             comp.setEnabled(false);
                         }
@@ -336,28 +336,28 @@ public class JogoInterfaceGrafica {
             }
         };
 
-        atualiza_texto.execute();
+        atualizaTexto.execute();
     }
 
-    private void MeterBotoesMissao(String[] options) {
-        game_over = jogo.getNave().AcabouRecurso();
+    private void MeterBotoesMissao(String[] opcoes) {
+        gameOver = jogo.getNave().AcabouRecurso();
 
-        if (game_over) {
+        if (gameOver) {
             frame.dispose();
             JOptionPane.showMessageDialog(frame, "GAME OVER! Obrigado por jogar!", "Fim do Jogo", JOptionPane.INFORMATION_MESSAGE);
             System.exit(0);
             return;
         }
 
-        area_botoesmissao.removeAll();
-        area_botoesmissao.setLayout(new BorderLayout());
+        areaBotoesmissao.removeAll();
+        areaBotoesmissao.setLayout(new BorderLayout());
 
-        JButton botao_comecar = new JButton("Avançar");
-        botao_comecar.setVisible(true);
-        botao_comecar.addActionListener(e -> {
-            area_texto.setText("");
-            area_botoesmissao.removeAll();
-            area_botoesmissao.setLayout(new GridBagLayout());
+        JButton botaoComecar = new JButton("Avançar");
+        botaoComecar.setVisible(true);
+        botaoComecar.addActionListener(e -> {
+            areaTexto.setText("");
+            areaBotoesmissao.removeAll();
+            areaBotoesmissao.setLayout(new GridBagLayout());
 
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridx = 0;
@@ -365,75 +365,75 @@ public class JogoInterfaceGrafica {
             gbc.anchor = GridBagConstraints.CENTER;
             gbc.insets = new Insets(10, 20, 10, 20);
 
-            for (int i = 0; i < options.length; i++) {
+            for (int i = 0; i < opcoes.length; i++) {
                 int escolha = i;
-                JButton botao_opcao = new JButton("Opção " + (i + 1) + ": " + options[i]);
+                JButton botaoOpcao = new JButton("Opção " + (i + 1) + ": " + opcoes[i]);
 
-                botao_opcao.setBackground(Color.BLACK);
-                botao_opcao.setForeground(Color.WHITE);
-                botao_opcao.setFont(new Font("Arial", Font.BOLD, 16));
-                botao_opcao.setPreferredSize(new Dimension(frame.getWidth() - 200, 40));
+                botaoOpcao.setBackground(Color.BLACK);
+                botaoOpcao.setForeground(Color.WHITE);
+                botaoOpcao.setFont(new Font("Arial", Font.BOLD, 16));
+                botaoOpcao.setPreferredSize(new Dimension(frame.getWidth() - 200, 40));
 
-                botao_opcao.addActionListener(choiceEvent -> {
+                botaoOpcao.addActionListener(choiceEvent -> {
                     jogo.EscolherOpcao(escolha);
                     AtualizarTexto(jogo.getUltimaMensagem());
-                    area_botoesmissao.removeAll();
-                    area_botoesmissao.revalidate();
-                    area_botoesmissao.repaint();
-                    dentro_missao = false;
-                    if (dentro_missao && !game_over) {
+                    areaBotoesmissao.removeAll();
+                    areaBotoesmissao.revalidate();
+                    areaBotoesmissao.repaint();
+                    dentroMissao = false;
+                    if (dentroMissao && !gameOver) {
                         jogo.MostrarStatus();
-                        area_status.setText(jogo.getUltimaMensagem());
+                        areaStatus.setText(jogo.getUltimaMensagem());
                     }
                 });
 
-                area_botoesmissao.add(botao_opcao, gbc);
+                areaBotoesmissao.add(botaoOpcao, gbc);
                 gbc.gridy++;
             }
 
-            botao_comecar.setVisible(false);
-            botao_explorar.setVisible(true);
-            botao_descansar.setVisible(true);
-            if (atualiza_texto != null && !atualiza_texto.isDone()) {
-                atualiza_texto.cancel(true);
+            botaoComecar.setVisible(false);
+            botaoExplorar.setVisible(true);
+            botaoDescansar.setVisible(true);
+            if (atualizaTexto != null && !atualizaTexto.isDone()) {
+                atualizaTexto.cancel(true);
             }
-            StyledDocument doc = area_texto.getStyledDocument();
+            StyledDocument doc = areaTexto.getStyledDocument();
             SimpleAttributeSet blackDot = new SimpleAttributeSet();
             StyleConstants.setForeground(blackDot, Color.white);
 
             SimpleAttributeSet defaultStyle = new SimpleAttributeSet();
             StyleConstants.setForeground(defaultStyle, Color.white);
-            painel_fundo.revalidate();
-            painel_fundo.repaint();
+            painelFundo.revalidate();
+            painelFundo.repaint();
 
             try {
                 doc.remove(0, doc.getLength());
                 AjustarTamanhoTexto(".");
                 doc.setCharacterAttributes(0, doc.getLength(), defaultStyle, false);
-                area_texto.setCaretPosition(doc.getLength());
+                areaTexto.setCaretPosition(doc.getLength());
             } catch (BadLocationException bl) {
                 bl.printStackTrace();
             }
 
-            painel_fundo.revalidate();
-            painel_fundo.repaint();
+            painelFundo.revalidate();
+            painelFundo.repaint();
 
-            if (game_over) {
+            if (gameOver) {
                 frame.dispose();
                 JOptionPane.showMessageDialog(frame, "GAME OVER! Obrigado por jogar!", "Fim do Jogo", JOptionPane.INFORMATION_MESSAGE);
                 System.exit(0);
                 return;
             }
 
-            area_botoesmissao.revalidate();
-            area_botoesmissao.repaint();
+            areaBotoesmissao.revalidate();
+            areaBotoesmissao.repaint();
         });
 
-        botao_explorar.setVisible(false);
-        botao_descansar.setVisible(false);
-        area_botoes.add(botao_comecar);
+        botaoExplorar.setVisible(false);
+        botaoDescansar.setVisible(false);
+        areaBotoes.add(botaoComecar);
 
-        area_botoesmissao.revalidate();
-        area_botoesmissao.repaint();
+        areaBotoesmissao.revalidate();
+        areaBotoesmissao.repaint();
     }
 }
