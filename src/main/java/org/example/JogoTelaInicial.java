@@ -46,7 +46,7 @@ public class JogoTelaInicial {
 			imagemFundo = iconeFundo.getImage().getScaledInstance(frame.getWidth(), frame.getHeight(), Image.SCALE_SMOOTH);
         } catch (Exception e) {
 			e.printStackTrace();
-			throw new RuntimeException("Falha ao carregar a imagem.");
+			throw new IllegalArgumentException("Falha ao carregar a imagem.");
 		}
         // ---------------------------------------
 
