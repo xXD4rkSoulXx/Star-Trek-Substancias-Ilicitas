@@ -13,65 +13,60 @@ public class Nave {
     private int vida;
     private int substancias;
     // Mensagens que aparecem depois de descansar
-    private List<String> mensagem_acordar;
+    private List<String> mensagemAcordar;
     // Mensagens que aparecem quando quer descansar, mas os Status já estão no máximo
-    private List<String> mensagem_jadescansou;
+    private List<String> mensagemJadescansou;
     // Objeto para usar o metodo random
     private Random r;
     // Número random para selecionar de forma randômica a mensagem de acordar
     private int random;
     // Verifica se já é GameOver ou não
-    private boolean game_over;
-    private String nome_jogador;
+    private boolean gameOver;
+    private String nomeJogador;
     private JFrame frame;
 
-    public Nave(String nome_jogador) {
-        this.nome_jogador = nome_jogador;
+    public Nave(String nomeJogador) {
+        this.nomeJogador = nomeJogador;
         this.energia = 100;
         this.comida = 100;
         this.reputacao = 10;
         this.vida = 100;
         this.substancias = 0;
-        this.game_over = false;
+        this.gameOver = false;
         r = new Random();
 
         // Configurar as possíveis mensagens ao acordar
         // --------------------------------------
-        this.mensagem_acordar = new ArrayList<>();
-        this.mensagem_acordar.add("""
+        this.mensagemAcordar = new ArrayList<>();
+        this.mensagemAcordar.add("""
                 Já chega de descanso, Baiano! É hora de acordar.
                 Você restaurou toda sua energia, comida e vida.""");
-        this.mensagem_acordar.add("""
+        this.mensagemAcordar.add("""
                 Baiano, o tempo de descanso acabou!
                 Você recuperou toda sua energia, comida e vida.""");
-        this.mensagem_acordar.add("""
+        this.mensagemAcordar.add("""
                 Ei, Baiano, já dormiu o bastante! Levanta!
                 Você recuperou a energia, comida e saúde.""");
-        this.mensagem_acordar.add("""
+        this.mensagemAcordar.add("""
                 Chega de soneca, Baiano! Hora de levantar.
                 Sua vida, energia e suprimentos foram restaurados.""");
-        this.mensagem_acordar.add("""
+        this.mensagemAcordar.add("""
                 Descanso finalizado, Baiano! Hora de se levantar.
                 Você está com energia, comida e vida completas.""");
-        this.mensagem_acordar.add("""
+        this.mensagemAcordar.add("""
                 Vamos acordar, Baiano! Já descansou o suficiente.
                 Sua vida, energia e fome foram restauradas.""");
-        this.random = r.nextInt(mensagem_acordar.size());
+        this.random = r.nextInt(mensagemAcordar.size());
         // --------------------------------------
 
         // Configurar as possíveis mensagens ao querer descansar com os Status máximo
         // --------------------------------------
-        this.mensagem_jadescansou = new ArrayList<>();
-        this.mensagem_jadescansou.add("""
-                Baiano, eu sei que o sono ainda te chama, mas já acordaste! Agora é hora de ação!""");
-        this.mensagem_jadescansou.add("""
-                Nada de descanso agora, Baiano! Já estás mais do que recuperado.""");
-        this.mensagem_jadescansou.add("""
-                Baiano, nem mais um cochilo! Estás desperto, nada de tentar dormir de novo!""");
-        this.mensagem_jadescansou.add("""
-                Baiano, nem adianta! Acabaste de acordar, então nada de voltas ao sono!""");
-        this.mensagem_jadescansou.add("""
-                Descansar mais? Nem pensar, Baiano! Já estás pronto para a próxima!""");
+        this.mensagemJadescansou = new ArrayList<>();
+        this.mensagemJadescansou.add("Baiano, eu sei que o sono ainda te chama, mas já acordaste! Agora é hora de ação!");
+        this.mensagemJadescansou.add("Nada de descanso agora, Baiano! Já estás mais do que recuperado.");
+        this.mensagemJadescansou.add("Baiano, nem mais um cochilo! Estás desperto, nada de tentar dormir de novo!");
+        this.mensagemJadescansou.add("Baiano, nem adianta! Acabaste de acordar, então nada de voltas ao sono!");
+        this.mensagemJadescansou.add("Descansar mais? Nem pensar, Baiano! Já estás pronto para a próxima!");
         // --------------------------------------
     }
 
@@ -80,7 +75,7 @@ public class Nave {
     // Mostrar Status
     // --------
     public String getStatus() {
-        if (game_over) {
+        if (gameOver) {
             return "Você perdeu!";
         }
 
@@ -97,23 +92,23 @@ public class Nave {
     }
     // --------
 
-    public void UsarRecursos(int custo_energia, int custo_comida) {
-        if (game_over) {
+    public void usarRecursos(int custoEnergia, int custoComida) {
+        if (gameOver) {
             return;
         }
 
-        this.energia -= custo_energia;
-        this.comida -= custo_comida;
+        this.energia -= custoEnergia;
+        this.comida -= custoComida;
 
         if (this.comida <= 0) {
             // Para não haver status negativos, pûs para receber 0
             this.comida = 0;
-            game_over = true;
+            gameOver = true;
         }
     }
 
-    public void AdicionarSubstancias() {
-        if (game_over) {
+    public void adicionarSubstancias() {
+        if (gameOver) {
             return;
         }
         this.substancias++;
@@ -127,23 +122,23 @@ public class Nave {
             // Vai buscar os dados ao txt para depois poder atualizar para não estar a zerar os dados
             // ------------
             if (ficheiro.exists()) {
-                BufferedReader ler_ficheiro = new BufferedReader(new FileReader(ficheiro));
+                BufferedReader lerFicheiro = new BufferedReader(new FileReader(ficheiro));
                 String linha;
                 // Vai buscar os dados enquanto não for null, porque quando for null significa que cheguei
                 // ao EOF (Fim do ficheiro)
-                while ((linha = ler_ficheiro.readLine()) != null) {
+                while ((linha = lerFicheiro.readLine()) != null) {
                     dados.add(linha);
                 }
-                ler_ficheiro.close();
+                lerFicheiro.close();
             }
             // ------------
 
             // Substitui os dados antigos pelos novos
             // ------------
             SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String data_atual = formato.format(new Date());
+            String dataAtual = formato.format(new Date());
 
-            String atualizacao = String.format("%s;%s;%d", nome_jogador, data_atual, substancias);
+            String atualizacao = String.format("%s;%s;%d", nomeJogador, dataAtual, substancias);
             if (!dados.isEmpty()) {
                 dados.set(dados.size() - 1, atualizacao);
             } else {
@@ -153,15 +148,13 @@ public class Nave {
 
             // Atualiza os novos dados no ficheiro
             // ------------
-            BufferedWriter escrever_ficheiro = new BufferedWriter(new FileWriter(ficheiro));
+            BufferedWriter escreverFicheiro = new BufferedWriter(new FileWriter(ficheiro));
             for (String registo : dados) {
-                escrever_ficheiro.write(registo);
-                escrever_ficheiro.newLine();
+                escreverFicheiro.write(registo);
+                escreverFicheiro.newLine();
             }
-            escrever_ficheiro.close();
+            escreverFicheiro.close();
             // ------------
-
-            System.out.println("Jogador atualizado com sucesso!");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -172,34 +165,34 @@ public class Nave {
         return this.substancias;
     }
 
-    public void AumentarReputacao(int quantidade) {
-        if (game_over) {
+    public void aumentarReputacao(int quantidade) {
+        if (gameOver) {
             return;
         }
         this.reputacao += quantidade;
     }
 
-    public void PerderVida(int quantidade) {
-        if (game_over) {
+    public void perderVida(int quantidade) {
+        if (gameOver) {
             return;
         }
         this.vida -= quantidade;
         if (this.vida <= 0) {
             this.vida = 0;
-            game_over = true;
+            gameOver = true;
         }
     }
 
-    public String Descansar() {
-        if (game_over) {
+    public String descansar() {
+        if (gameOver) {
             return "Você perdeu!";
         }
 
         // Verifica se a energia ou a vida já estão no máximo para impôr um limite
         // ------------
         if ((this.energia == 100) || (this.vida == 100)) {
-            this.random = r.nextInt(mensagem_jadescansou.size());
-            return this.mensagem_jadescansou.get(random);
+            random = r.nextInt(mensagemJadescansou.size());
+            return this.mensagemJadescansou.get(random);
         } else {
             this.energia += 10;
             this.comida += 5;
@@ -210,32 +203,22 @@ public class Nave {
             if (this.vida > 100)
                 this.vida = 100;
 
-            this.random = r.nextInt(mensagem_acordar.size());
-            return this.mensagem_acordar.get(random);
+            random = r.nextInt(mensagemAcordar.size());
+            return this.mensagemAcordar.get(random);
         }
         // ------------
     }
 
-    public int getVida() {
-        return this.vida;
-    }
-
-    public int getComida() {
-        return this.comida;
-    }
-
     public String getNomeJogador() {
-        return this.nome_jogador;
+        return this.nomeJogador;
     }
     // ------------------------------------------------------------------------
 
 
     // Metodos necessários para a Interface
     // ---------------------------------
-    public boolean AcabouRecurso() {
-        if (this.vida <= 0 || this.comida <= 0) {
-            return true;
-        } else return false;
+    public boolean acabouRecurso() {
+        return this.vida <= 0 || this.comida <= 0;
     }
 
     public void setFrame(JFrame frame) {
