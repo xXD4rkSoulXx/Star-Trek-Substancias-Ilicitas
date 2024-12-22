@@ -1,4 +1,4 @@
-package org.example;
+package main.java.org.example;
 
 import javax.swing.*;
 import javax.swing.text.*;
