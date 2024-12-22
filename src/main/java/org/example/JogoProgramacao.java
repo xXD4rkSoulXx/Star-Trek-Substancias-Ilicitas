@@ -1,3 +1,5 @@
+package org.example;
+
 import javax.swing.*;
 import java.util.List;
 import java.util.ArrayList;

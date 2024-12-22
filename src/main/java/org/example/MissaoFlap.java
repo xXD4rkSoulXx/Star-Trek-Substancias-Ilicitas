@@ -1,3 +1,5 @@
+package org.example;
+
 //Roteiro do Planeta Estudo, Missão do Rei Flap
 // ---------------------------------
 // Uso de herança

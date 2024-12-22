@@ -1,3 +1,5 @@
+package org.example;
+
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;

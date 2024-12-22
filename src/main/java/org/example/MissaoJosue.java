@@ -1,3 +1,5 @@
+package org.example;
+
 //Roteiro do Planeta Ritter, Missão do Rei Josué
 // ---------------------------------
 // Uso de herança

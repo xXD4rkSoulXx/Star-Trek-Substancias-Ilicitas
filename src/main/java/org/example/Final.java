@@ -1,3 +1,5 @@
+package org.example;
+
 //Roteiro do Planeta Veggs, Missão Final do Rei Veggs, entregar todas as Substâncias Proibidas
 // ---------------------------------
 // Uso de herança
