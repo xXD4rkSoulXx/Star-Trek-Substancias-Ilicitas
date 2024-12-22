@@ -1,3 +1,5 @@
+package main.java.org.example;
+
 //Roteiro do Planeta Ansiedade, Missão do Rei Kosky
 // ---------------------------------
 // Uso de herança

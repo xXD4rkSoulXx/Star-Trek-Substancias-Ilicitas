@@ -1,3 +1,5 @@
+package main.java.org.example;
+
 // Classe Abstrata de Missão, essa classe vai servir depois para fazer a missão de cada planeta
 // ---------------------------------
 public abstract class Missao {
